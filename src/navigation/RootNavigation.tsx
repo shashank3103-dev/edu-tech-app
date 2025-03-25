@@ -12,7 +12,7 @@ const RootNavigation = () => {
     <NavigationContainer>
     <RootStack.Navigator
       // initialRouteName="SPLASHSCREEN"
-      screenOptions={TransitionScreenOptions}
+      screenOptions={{headerShown: false}}
     >
       <RootStack.Screen
         name="SPLASHSCREEN"
