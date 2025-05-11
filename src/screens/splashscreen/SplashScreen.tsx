@@ -4,6 +4,7 @@ import {
   Alert,
   FlatList,
   Image,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -12,9 +13,14 @@ import {
 import React, { useEffect, useState } from "react";
 import CommonHeader from "../../components/CommonHeader";
 import URLManager from "../../networkLayer/URLManager";
-import { COLORS } from "../../resources";
+import { COLORS, FONTS, ICONS } from "../../resources";
+import { useAppTheme } from "../../resources/ThemeContext";
+import { useTheme } from "@react-navigation/native";
 
 const SplashScreen = () => {
+  const { colors } = useTheme();
+  const theme = useAppTheme();
+
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState();
 
@@ -50,41 +56,55 @@ const SplashScreen = () => {
     }
   }
   return (
-    <View style={{ flex: 1 }}>
-      <CommonHeader title={"splash"} />
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        {loading ? (
-          <ActivityIndicator size="large" color={COLORS.red} />
-        ) : (
-          <FlatList
-            data={products}
-            renderItem={({ item }: any) => {
-              return (
-                <View>
-                  <Image
-                    source={{ uri: item.image }}
-                    style={{ width: 100, height: 100 }}
-                  ></Image>
-                  <Text
-                    style={{
-                      color: "black",
-                      fontSize: 20,
-                      fontFamily: "Roboto-Regular",
-                    }}
-                  >
-                    {item.title}
-                  </Text>
-                </View>
-              );
-            }}
-            keyExtractor={(item: any) => item.id}
-          />
-        )}
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.COLORS.background }]}
+    >
+      <View style={styles.inner}>
+        <Text style={[FONTS.h1, { color: theme.COLORS.text }]}>
+          Themed Full Screen
+        </Text>
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: theme.COLORS.card,
+              shadowColor: theme.COLORS.black,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.25,
+              shadowRadius: 2.84,
+              elevation: 5,
+            },
+          ]}
+        >
+          {/* <Image
+           source={ICONS.APP_LOGO_ICON}
+            style={{ width: 100, height: 100 }}
+            resizeMode="contain"
+          /> */}
+          <Text style={[FONTS.body4, { color: theme.COLORS.text }]}>
+            shashank
+          </Text>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default SplashScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  inner: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  card: {
+    padding: 100,
+    borderRadius: 12,
+    margin: 16,
+  },
+});
