@@ -2,6 +2,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TransitionPresets } from "@react-navigation/stack";
 import SplashScreen from "../screens/splashscreen/SplashScreen";
 import { NavigationContainer } from "@react-navigation/native";
+import Login from "../screens/authentication/Login";
+import HomeScreen from "../screens/home/HomeScreen";
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
   const TransitionScreenOptions = {
@@ -11,12 +13,22 @@ const RootNavigation = () => {
   return (
     <NavigationContainer>
     <RootStack.Navigator
-      // initialRouteName="SPLASHSCREEN"
+      initialRouteName="LOGIN"
       screenOptions={{headerShown: false}}
     >
       <RootStack.Screen
         name="SPLASHSCREEN"
         component={SplashScreen}
+        options={{ headerShown: false }}
+      />
+       <RootStack.Screen
+        name="LOGIN"
+        component={Login}
+        options={{ headerShown: false }}
+      />
+       <RootStack.Screen
+        name="HOMESCREEN"
+        component={HomeScreen}
         options={{ headerShown: false }}
       />
     </RootStack.Navigator>

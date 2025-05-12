@@ -1,11 +1,18 @@
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useAppTheme } from "../../resources/ThemeContext";
 import { FONTS } from "../../resources/Theme";
+import { useNavigation } from "@react-navigation/native";
 
 const SplashScreen = () => {
   const theme = useAppTheme();
-
+  const navigation = useNavigation();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.navigate("LOGIN" as never);
+    }, 2000);
+    return () => clearTimeout(timer); // Cleanup on unmount
+  }, [navigation]);
   return (
     <SafeAreaView
       style={[
