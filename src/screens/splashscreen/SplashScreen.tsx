@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useAppTheme } from "../../resources/ThemeContext";
 import { FONTS } from "../../resources/Theme";
 import { useNavigation } from "@react-navigation/native";
+import { ICONS } from "../../resources";
 
 const SplashScreen = () => {
   const theme = useAppTheme();
@@ -26,10 +27,10 @@ const SplashScreen = () => {
       ]}
     >
       <Text style={[FONTS.body4, { color: theme.COLORS.text }]}>
-        Splash Screen
+        Edu tech App
       </Text>
       <Image
-        source={require("../../assets/login.png")}
+     source={ICONS.APP_LOGO_ICON}
         style={{
           width: 100,
           height: 100,
