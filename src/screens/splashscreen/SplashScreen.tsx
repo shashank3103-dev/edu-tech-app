@@ -26,14 +26,13 @@ const SplashScreen = () => {
         { backgroundColor: theme.COLORS.background },
       ]}
     >
-      <Text style={[FONTS.body4, { color: theme.COLORS.text }]}>
-        Edu tech App
-      </Text>
+    
       <Image
      source={ICONS.APP_LOGO_ICON}
         style={{
-          width: 100,
-          height: 100,
+          width: 200,
+          height: 200,
+          tintColor: theme.COLORS.primary,  
         }}
         resizeMode="contain"
       />

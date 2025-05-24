@@ -5,6 +5,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import Login from "../screens/authentication/Login";
 import HomeScreen from "../screens/home/HomeScreen";
 import BottomTab from "./BottomTab";
+import ForgotPassword from "../screens/authentication/ForgotPassword";
+import SignUp from "../screens/authentication/SignUp";
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
   const TransitionScreenOptions = {
@@ -14,25 +16,40 @@ const RootNavigation = () => {
   return (
     <NavigationContainer>
     <RootStack.Navigator
-      initialRouteName="SPLASHSCREEN"
+      initialRouteName="BottomTabStack"
       screenOptions={{headerShown: false}}
     >
       <RootStack.Screen
         name="SPLASHSCREEN"
+       
         component={SplashScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: false,
+          animation: "fade",
+         }}
       />
        <RootStack.Screen
         name="LOGIN"
         component={Login}
-        options={{ headerShown: false }}
+        options={{ headerShown: false,
+          animation: 'fade',
+        
+         }}
       />
        <RootStack.Screen name="BottomTabStack" component={BottomTab} />
-       {/* <RootStack.Screen
-        name="HOMESCREEN"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      /> */}
+       <RootStack.Screen
+        name="FORGOT_PASSWORD"
+        component={ForgotPassword}
+        options={{ headerShown: false ,
+          animation: 'fade',
+        }}
+      />
+       <RootStack.Screen
+        name="SIGN_UP"
+        component={SignUp}
+        options={{ headerShown: false,
+          animation: 'fade',
+         }}
+      />
     </RootStack.Navigator>
     </NavigationContainer>
   );

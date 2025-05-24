@@ -1,29 +1,28 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   Image,
   Platform,
-  useColorScheme,
-} from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeNavigation from './HomeNavigation';
-import LearnNavigation from './LearnNavigation';
-import Profile from '../screens/profile/Profile';
-import BookingNavigation from './BookingNavigation';
-import { ICONS } from '../resources';
-import { useAppTheme } from '../resources/ThemeContext'; // assuming this exists
+} from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import HomeNavigation from "./HomeNavigation";
+import LearnNavigation from "./LearnNavigation";
+import Profile from "../screens/profile/Profile";
+import BookingNavigation from "./BookingNavigation";
+import { ICONS } from "../resources";
+import { useAppTheme } from "../resources/ThemeContext"; // assuming this exists
 
 function getIcons(routeName: string) {
   switch (routeName) {
-    case 'HomeNavigation':
+    case "HomeNavigation":
       return ICONS.HOME;
-    case 'LearnNavigation':
+    case "LearnNavigation":
       return ICONS.LEARN;
-    case 'BookingNavigation':
+    case "BookingNavigation":
       return ICONS.BOOKING;
-    case 'Profile':
+    case "Profile":
       return ICONS.PROFILE;
     default:
       return ICONS.HOME;
@@ -36,13 +35,13 @@ function MyTabBar({ state, descriptors, navigation }: any) {
   return (
     <View
       style={{
-        flexDirection: 'row',
-        paddingVertical: Platform.OS === 'ios' ? '5%' : '3%',
-        paddingHorizontal: '5%',
+        flexDirection: "row",
+        paddingVertical: Platform.OS === "ios" ? "5%" : "3%",
+        paddingHorizontal: "5%",
         backgroundColor: theme.COLORS.background,
-        justifyContent: 'space-between',
-        borderTopWidth: 0.5,
-        borderTopColor: theme.COLORS.card
+        justifyContent: "space-between",
+        borderTopWidth: 1,
+        borderTopColor: theme.COLORS.card,
       }}
     >
       {state.routes.map(
@@ -59,7 +58,7 @@ function MyTabBar({ state, descriptors, navigation }: any) {
 
           const onPress = () => {
             const event = navigation.emit({
-              type: 'tabPress',
+              type: "tabPress",
               target: route.key,
             });
 
@@ -70,7 +69,7 @@ function MyTabBar({ state, descriptors, navigation }: any) {
 
           const onLongPress = () => {
             navigation.emit({
-              type: 'tabLongPress',
+              type: "tabLongPress",
               target: route.key,
             });
           };
@@ -84,7 +83,10 @@ function MyTabBar({ state, descriptors, navigation }: any) {
               testID={options.tabBarTestID}
               onPress={onPress}
               onLongPress={onLongPress}
-              style={{ alignItems: 'center', justifyContent: 'center' }}
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
               <Image
                 source={getIcons(route.name)}
@@ -99,14 +101,16 @@ function MyTabBar({ state, descriptors, navigation }: any) {
               <Text
                 style={{
                   marginTop: 4,
-                  color: isFocused
-                    ? theme.COLORS.primary
-                    : theme.COLORS.gray,
+                  color: isFocused ? theme.COLORS.primary : theme.COLORS.gray,
                   fontSize: isFocused ? 14 : 12,
-                  fontWeight: isFocused ? '600' : '400',
+                  fontWeight: isFocused ? "600" : "400",
+                  fontFamily: isFocused
+                    ? "Quicksand-SemiBold"
+                    : "Quicksand-Regular",
+                  textAlign: "center",
                 }}
               >
-                {label.replace('Navigation', '')}
+                {label.replace("Navigation", "")}
               </Text>
             </TouchableOpacity>
           );
