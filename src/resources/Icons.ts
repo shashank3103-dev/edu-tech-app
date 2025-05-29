@@ -13,7 +13,16 @@ const BANNER_1 = require("../assets/images/banner-1.png");
 const BANNER_2 = require("../assets/images/banner-2.jpg");
 const SEARCH = require("../assets/images/magnifying.png");
 const MICROPHONE = require("../assets/images/microphone.png");
+const COURSE = require("../assets/images/online-certificate.png");
+const SCHEDULE = require("../assets/images/calendar.png");
+const PROMOTION = require("../assets/images/marketing.png");
+const RECRUITMENT = require("../assets/images/search-user.png");
+
 export {
+  SCHEDULE,
+  PROMOTION,
+  RECRUITMENT,
+  COURSE,
   SEARCH,
   MICROPHONE,
   BANNER_1,
