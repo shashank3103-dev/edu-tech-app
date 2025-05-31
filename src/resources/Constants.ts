@@ -7,8 +7,7 @@ export const kHEADERLANGUAGE = 'en_US';
 export const kCLIENTVERSION = '1.2.1:' + platform;
 
 export const baseUrl = 
-'https://fakestoreapi.com'
-
+'http://10.0.2.2:11000'
 ;
 // Used for async storage
 export const storageKeys = {
@@ -24,6 +23,7 @@ export const EndPoints = {
   GETDATAENDPOINT: '/send-otp',
   PHONELOGIN: '/send-otp',
   VERIFY_OTP: '/check-otp/',
+  SIGN_UP:'/api/user/signup',
   GET_USER_DETAIL: '/getUserDetail',
   UPDATE_USER_DETAIL: '/updateUser',
   UPLOAD_USER_IMAGE: '/uploadProfileImage',

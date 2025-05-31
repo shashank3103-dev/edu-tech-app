@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   SafeAreaView,
   ScrollView,
@@ -12,12 +13,63 @@ import { useAppTheme } from "../../resources/ThemeContext";
 import { FONTS, ICONS } from "../../resources";
 import { TextInput } from "react-native-paper";
 import CheckBox from "react-native-check-box";
-
+import URLManager from "../../networkLayer/URLManager";
 const SignUp = ({ navigation }: any) => {
   const theme = useAppTheme();
-  const [input, setInput] = useState("");
-  const [isChecked, setIsChecked] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [role, setRole] = useState<"tutor" | "student" | "">("");
+  const [isTerms, setTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
 
+  async function handleSignUp(){
+    try {
+      setLoading(true);
+      if (!name || !email || !password || !phone || !role || !isTerms) {
+        Alert.alert(
+          "Validation Error",
+          "Please fill all fields and accept terms."
+        );
+        setLoading(false);
+        return;
+      }
+      let urlManager = new URLManager();
+      const payload = {
+        name: name,
+        email: email,
+        password: password,
+        phone: phone,
+        role: role,
+      };
+      console.log(payload);
+      return urlManager
+        .userOrTutorSignUp(payload)
+        .then((res) => {
+          return res.json() as Promise<any>;
+        })
+        .then((res: any) => {
+          if (!res.error) {
+            console.log(res);
+            navigation.navigate('OTP');
+          } else {
+            if (res.error == "Failed to SignUp")
+              Alert.alert("Error", res.error);
+          }
+          console.log(res);
+        })
+        .catch((e) => {
+          Alert.alert(e.name, e.message);
+          return e.response;
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } catch (er) {
+      console.log(er);
+    }
+  };
   return (
     <SafeAreaView
       style={[
@@ -54,7 +106,6 @@ const SignUp = ({ navigation }: any) => {
           flexGrow: 1,
           justifyContent: "center",
           alignItems: "center",
-          // paddingVertical: 20,
           paddingBottom: 30,
         }}
         showsVerticalScrollIndicator={false}
@@ -64,7 +115,6 @@ const SignUp = ({ navigation }: any) => {
           style={{
             width: 200,
             height: 200,
-
             tintColor: theme.COLORS.secondary,
           }}
           resizeMode="contain"
@@ -81,66 +131,36 @@ const SignUp = ({ navigation }: any) => {
           Sign up as a student or a tutor and start your educational journey
           with us.
         </Text>
-        <View
+
+        <TextInput
+          label="First Name"
+          mode="outlined"
+          keyboardType="email-address"
+          value={name}
+          onChangeText={(text) => {
+            setName(text);
+          }}
           style={{
             width: "90%",
-            flexDirection: "row",
-            justifyContent: "space-between",
+            marginBottom: 10,
           }}
-        >
-          <TextInput
-            label="First Name"
-            mode="outlined"
-            keyboardType="email-address"
-            value={input}
-            // onChangeText={setInput}
-            onChangeText={(text) => {
-              setInput(text);
-            }}
-            style={{
-              width: "49%",
-              marginBottom: 10,
-            }}
-            theme={{
-              colors: {
-                text: theme.COLORS.text,
-                primary: theme.COLORS.text,
-                background: theme.COLORS.background,
-                placeholder: "#999",
-              },
-            }}
-          />
-          <TextInput
-            label="Last Name"
-            mode="outlined"
-            keyboardType="email-address"
-            value={input}
-            // onChangeText={setInput}
-            onChangeText={(text) => {
-              setInput(text);
-            }}
-            style={{
-              width: "49%",
-              marginBottom: 10,
-            }}
-            theme={{
-              colors: {
-                text: theme.COLORS.text,
-                primary: theme.COLORS.text,
-                background: theme.COLORS.background,
-                placeholder: "#999",
-              },
-            }}
-          />
-        </View>
+          theme={{
+            colors: {
+              text: theme.COLORS.text,
+              primary: theme.COLORS.text,
+              background: theme.COLORS.background,
+              placeholder: "#999",
+            },
+          }}
+        />
+
         <TextInput
           label="Email Address"
           mode="outlined"
           keyboardType="email-address"
-          value={input}
-          // onChangeText={setInput}
+          value={email}
           onChangeText={(text) => {
-            setInput(text);
+            setEmail(text);
           }}
           style={{
             width: "90%",
@@ -159,10 +179,9 @@ const SignUp = ({ navigation }: any) => {
           label="Phone Number"
           mode="outlined"
           keyboardType="number-pad"
-          value={input}
-          // onChangeText={setInput}
+          value={phone}
           onChangeText={(text) => {
-            setInput(text);
+            setPhone(text);
           }}
           style={{
             width: "90%",
@@ -180,11 +199,11 @@ const SignUp = ({ navigation }: any) => {
         <TextInput
           label="Password"
           mode="outlined"
-          secureTextEntry
-          value={input}
-          // onChangeText={setInput}
+          // secureTextEntry
+          keyboardType="visible-password"
+          value={password}
           onChangeText={(text) => {
-            setInput(text);
+            setPassword(text);
           }}
           style={{
             width: "90%",
@@ -199,27 +218,7 @@ const SignUp = ({ navigation }: any) => {
             },
           }}
         />
-        <TextInput
-          label="Confirm Password"
-          mode="outlined"
-          value={input}
-          // onChangeText={setInput}
-          onChangeText={(text) => {
-            setInput(text);
-          }}
-          style={{
-            width: "90%",
-            marginBottom: 20,
-          }}
-          theme={{
-            colors: {
-              text: theme.COLORS.text,
-              primary: theme.COLORS.text,
-              background: theme.COLORS.background,
-              placeholder: "#999",
-            },
-          }}
-        />
+
         <View
           style={{
             flexDirection: "row",
@@ -229,8 +228,8 @@ const SignUp = ({ navigation }: any) => {
           }}
         >
           <CheckBox
-            isChecked={isChecked}
-            onClick={() => setIsChecked(!isChecked)}
+            isChecked={role === "student"}
+            onClick={() => setRole("student")}
             checkBoxColor={theme.COLORS.primary}
           />
           <Text
@@ -239,11 +238,11 @@ const SignUp = ({ navigation }: any) => {
               { color: theme.COLORS.text, marginLeft: 10, flex: 1 },
             ]}
           >
-           Student
+            Student
           </Text>
           <CheckBox
-            isChecked={isChecked}
-            onClick={() => setIsChecked(!isChecked)}
+            isChecked={role === "tutor"}
+            onClick={() => setRole("tutor")}
             checkBoxColor={theme.COLORS.primary}
           />
           <Text
@@ -252,7 +251,7 @@ const SignUp = ({ navigation }: any) => {
               { color: theme.COLORS.text, marginLeft: 10, flex: 1 },
             ]}
           >
-           Tutor
+            Tutor
           </Text>
         </View>
         <View
@@ -264,26 +263,25 @@ const SignUp = ({ navigation }: any) => {
           }}
         >
           <CheckBox
-            isChecked={isChecked}
-            onClick={() => setIsChecked(!isChecked)}
+            isChecked={isTerms}
+            onClick={() => setTerms(!isTerms)}
             checkBoxColor={theme.COLORS.primary}
           />
           <Text
             style={[
               FONTS.body6,
-        
-              { color: theme.COLORS.text, marginLeft: 10, flex: 1,
-                // fontSize: 12,
-                // fontFamily: "Quicksand-Regular",
-               },
+              {
+                color: theme.COLORS.text,
+                marginLeft: 10,
+                flex: 1,
+              },
             ]}
           >
-           I have Read and agree to all Terms & Conditions and Privacy Policy.
+            I have Read and agree to all Terms & Conditions and Privacy Policy.
           </Text>
-         
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate("BottomTabStack")}
+          onPress={handleSignUp}
           style={[styles.button, { backgroundColor: theme.COLORS.primary }]}
         >
           <Text style={{ color: theme.COLORS.background, ...FONTS.h4 }}>
@@ -302,14 +300,7 @@ const SignUp = ({ navigation }: any) => {
           >
             Already have an account?
           </Text>
-          <TouchableOpacity
-            style={
-              {
-                //       marginTop: 20,
-              }
-            }
-            onPress={() => navigation.navigate("LOGIN")}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate("LOGIN")}>
             <Text
               style={[
                 FONTS.body5,
@@ -324,9 +315,7 @@ const SignUp = ({ navigation }: any) => {
     </SafeAreaView>
   );
 };
-
 export default SignUp;
-
 const styles = StyleSheet.create({
   button: {
     width: "90%",

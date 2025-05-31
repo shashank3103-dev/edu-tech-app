@@ -7,50 +7,46 @@ import HomeScreen from "../screens/home/HomeScreen";
 import BottomTab from "./BottomTab";
 import ForgotPassword from "../screens/authentication/ForgotPassword";
 import SignUp from "../screens/authentication/SignUp";
+import OtpScreen from "../screens/authentication/OtpScreen";
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
   const TransitionScreenOptions = {
-    ...TransitionPresets.SlideFromRightIOS, 
+    ...TransitionPresets.SlideFromRightIOS,
     headerShown: false,
   };
   return (
     <NavigationContainer>
-    <RootStack.Navigator
-      initialRouteName="BottomTabStack"
-      screenOptions={{headerShown: false}}
-    >
-      <RootStack.Screen
-        name="SPLASHSCREEN"
-       
-        component={SplashScreen}
-        options={{ headerShown: false,
-          animation: "fade",
-         }}
-      />
-       <RootStack.Screen
-        name="LOGIN"
-        component={Login}
-        options={{ headerShown: false,
-          animation: 'fade',
-        
-         }}
-      />
-       <RootStack.Screen name="BottomTabStack" component={BottomTab} />
-       <RootStack.Screen
-        name="FORGOT_PASSWORD"
-        component={ForgotPassword}
-        options={{ headerShown: false ,
-          animation: 'fade',
-        }}
-      />
-       <RootStack.Screen
-        name="SIGN_UP"
-        component={SignUp}
-        options={{ headerShown: false,
-          animation: 'fade',
-         }}
-      />
-    </RootStack.Navigator>
+      <RootStack.Navigator
+        initialRouteName="OTP"
+        screenOptions={{ headerShown: false }}
+      >
+        <RootStack.Screen
+          name="SPLASHSCREEN"
+          component={SplashScreen}
+          options={{ headerShown: false, animation: "fade" }}
+        />
+        <RootStack.Screen
+          name="LOGIN"
+          component={Login}
+          options={{ headerShown: false, animation: "fade" }}
+        />
+        <RootStack.Screen name="BottomTabStack" component={BottomTab} />
+        <RootStack.Screen
+          name="FORGOT_PASSWORD"
+          component={ForgotPassword}
+          options={{ headerShown: false, animation: "fade" }}
+        />
+        <RootStack.Screen
+          name="SIGN_UP"
+          component={SignUp}
+          options={{ headerShown: false, animation: "fade" }}
+        />
+        <RootStack.Screen
+          name="OTP"
+          component={OtpScreen}
+          options={{ headerShown: false, animation: "fade" }}
+        />
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 };
