@@ -11,5 +11,23 @@ interface signUpRequestBody {
   phone: string;
   role: string;
 }
+interface verifyOtpBody {
+  email: string;
+  otp: string;
+}
+interface resendOtpBody {
+  email: string;
+}
+interface loginBody {
+  email: string;
+  password: string;
+}
 
-export type {PhoneRequestBody, VerifyOtpRequestBody, signUpRequestBody};
+export type {
+  loginBody,
+  PhoneRequestBody,
+  VerifyOtpRequestBody,
+  signUpRequestBody,
+  verifyOtpBody,
+  resendOtpBody,
+};

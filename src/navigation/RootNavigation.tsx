@@ -17,7 +17,7 @@ const RootNavigation = () => {
   return (
     <NavigationContainer>
       <RootStack.Navigator
-        initialRouteName="OTP"
+        initialRouteName="SPLASHSCREEN"
         screenOptions={{ headerShown: false }}
       >
         <RootStack.Screen

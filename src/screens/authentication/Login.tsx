@@ -15,23 +15,60 @@ import {
 import { TextInput } from "react-native-paper";
 import { useAppTheme } from "../../resources/ThemeContext";
 import { FONTS, SHADOW } from "../../resources/Theme";
-import { COLORS, ICONS } from "../../resources";
-
+import { COLORS, ICONS, UTILITIES } from "../../resources";
+import URLManager from "../../networkLayer/URLManager";
+import { storageKeys } from "../../resources/Constants";
+import CustomButton from "../../components/CustomButton";
 const Login = ({ navigation }: any) => {
   const theme = useAppTheme();
-  const [input, setInput] = useState("");
-  const [error, setError] = useState(false);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState(false);
-
-  const handleLogin = () => {
-    if (input.trim() === "") {
-      setError(true);
-    } else {
-      setError(false);
-      // Navigate to Home or perform login
+  const [loading, setLoading] = useState(false);
+  async function handleLogin() {
+    try {
+      setLoading(true);
+      if (!password || !email) {
+        ToastAndroid.show("Please fill all fields", ToastAndroid.LONG);
+        setLoading(false);
+        return;
+      }
+      let urlManager = new URLManager();
+      const payload = {
+        email: email,
+        password: password,
+      };
+      console.log(payload);
+      return urlManager
+        .loginTutorOrStudent(payload)
+        .then((res) => {
+          return res.json() as Promise<any>;
+        })
+        .then((res: any) => {
+          if (!res.error) {
+            console.log(res);
+            UTILITIES.setDataInEncriptedStorage(storageKeys.kTOKEN, res.token);
+            ToastAndroid.show(res.message, ToastAndroid.SHORT);
+            // navigation.navigate("BottomTabStack");
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "BottomTabStack" }],
+            });
+          } else {
+            ToastAndroid.show(res.error || "Login failed", ToastAndroid.SHORT);
+          }
+          console.log(res);
+        })
+        .catch((e) => {
+          Alert.alert(e.name, e.message);
+          return e.response;
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } catch (er) {
+      console.log(er);
     }
-  };
+  }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -99,18 +136,14 @@ const Login = ({ navigation }: any) => {
           >
             Access courses, manage your schedule, and stay connected
           </Text>
-
           <TextInput
             label="Email Address"
             mode="outlined"
             keyboardType="email-address"
-            value={input}
-            // onChangeText={setInput}
+            value={email}
             onChangeText={(text) => {
-              setInput(text);
-              if (text.trim() !== "") setError(false);
+              setEmail(text);
             }}
-            error={error}
             style={styles.input}
             theme={{
               colors: {
@@ -121,17 +154,6 @@ const Login = ({ navigation }: any) => {
               },
             }}
           />
-          {error && (
-            <Text
-              style={{
-                color: "red",
-                marginLeft: 4,
-                fontSize: 12,
-              }}
-            >
-              Email is required
-            </Text>
-          )}
           <TextInput
             label="Password"
             mode="outlined"
@@ -139,9 +161,7 @@ const Login = ({ navigation }: any) => {
             value={password}
             onChangeText={(text) => {
               setPassword(text);
-              if (text.trim() !== "") setPasswordError(false);
             }}
-            error={passwordError}
             style={styles.input}
             theme={{
               colors: {
@@ -152,28 +172,15 @@ const Login = ({ navigation }: any) => {
               },
             }}
           />
-          {passwordError && (
-            <Text
-              style={{
-                color: "red",
-                marginLeft: 4,
-                fontSize: 12,
-              }}
-            >
-              Password is required
-            </Text>
-          )}
           <View
             style={{
               flex: 1,
               width: "90%",
-              // flexDirection:'row',
             }}
           >
             <TouchableOpacity
               style={{
                 alignSelf: "flex-end",
-                // marginTop: 10,
               }}
               onPress={() => navigation.navigate("FORGOT_PASSWORD")}
             >
@@ -182,14 +189,12 @@ const Login = ({ navigation }: any) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
+
+          <CustomButton
+            title="Login"
             onPress={handleLogin}
-            style={[styles.button, { backgroundColor: theme.COLORS.primary }]}
-          >
-            <Text style={{ color: theme.COLORS.background, ...FONTS.h4 }}>
-              Login
-            </Text>
-          </TouchableOpacity>
+            style={{ width: "90%", borderRadius: 8 }}
+          />
           <View
             style={{
               alignItems: "center",
@@ -206,7 +211,6 @@ const Login = ({ navigation }: any) => {
                 width: "40%",
               }}
             ></View>
-
             <Text
               style={[
                 FONTS.body4,
@@ -255,9 +259,7 @@ const Login = ({ navigation }: any) => {
     </KeyboardAvoidingView>
   );
 };
-
 export default Login;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -267,7 +269,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
-    // paddingVertical: 20,
     paddingBottom: 30,
   },
   input: {

@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Image,
   StyleProp,
   StyleSheet,
@@ -6,40 +7,49 @@ import {
   TouchableOpacity,
   View,
   ViewProps,
-} from 'react-native';
-import React from 'react';
-import {COLORS, ICONS} from '../resources';
+  ViewStyle,
+} from "react-native";
+import React from "react";
+import { COLORS, FONTS, ICONS } from "../resources";
+import { useAppTheme } from "../resources/ThemeContext";
 
 interface BtnProps {
-  style: any;
+  style: ViewStyle;
+  loading?: boolean;
   title: string;
   onPress: () => void;
 }
 const CustomButton = (props: BtnProps) => {
-  const {style, title, onPress} = props;
+  const theme = useAppTheme();
+  const { style, title, onPress, loading = false } = props;
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[
         {
-          backgroundColor: COLORS.fbBlue,
-          marginTop: '5%',
-          padding: '3%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          alignSelf: 'center',
-          flexDirection: 'row',
+          backgroundColor: theme.COLORS.primary,
+          marginTop: "5%",
+          padding: "4%",
+          justifyContent: "center",
+          alignItems: "center",
+          alignSelf: "center",
+          flexDirection: "row",
         },
         style,
-      ]}>
-      <Text
-        style={{
-          color: COLORS.white,
-          fontSize: 14,
-          fontFamily: 'Roboto-Regular',
-        }}>
-        {title}
-      </Text>
+      ]}
+    >
+      {loading ? (
+        <ActivityIndicator size="small" color={theme.COLORS.text} />
+      ) : (
+        <Text
+          style={{
+            color: theme.COLORS.background,
+            ...FONTS.h3,
+          }}
+        >
+          {title}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };

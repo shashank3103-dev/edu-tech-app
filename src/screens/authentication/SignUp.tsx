@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Alert,
   Image,
   SafeAreaView,
@@ -14,6 +15,7 @@ import { FONTS, ICONS } from "../../resources";
 import { TextInput } from "react-native-paper";
 import CheckBox from "react-native-check-box";
 import URLManager from "../../networkLayer/URLManager";
+import CustomButton from "../../components/CustomButton";
 const SignUp = ({ navigation }: any) => {
   const theme = useAppTheme();
   const [name, setName] = useState("");
@@ -24,7 +26,7 @@ const SignUp = ({ navigation }: any) => {
   const [isTerms, setTerms] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  async function handleSignUp(){
+  async function handleSignUp() {
     try {
       setLoading(true);
       if (!name || !email || !password || !phone || !role || !isTerms) {
@@ -52,9 +54,9 @@ const SignUp = ({ navigation }: any) => {
         .then((res: any) => {
           if (!res.error) {
             console.log(res);
-            navigation.navigate('OTP');
+            navigation.navigate("OTP", { email: payload.email });
           } else {
-            if (res.error == "Failed to SignUp")
+        
               Alert.alert("Error", res.error);
           }
           console.log(res);
@@ -69,7 +71,7 @@ const SignUp = ({ navigation }: any) => {
     } catch (er) {
       console.log(er);
     }
-  };
+  }
   return (
     <SafeAreaView
       style={[
@@ -87,7 +89,7 @@ const SignUp = ({ navigation }: any) => {
           alignItems: "center",
           marginTop: 20,
         }}
-        onPress={() => navigation.navigate("BottomTabStack")}
+        // onPress={() => navigation.navigate("BottomTabStack")}
       >
         <Text style={[FONTS.h3, { color: theme.COLORS.text }]}>Skip</Text>
         <Image
@@ -280,14 +282,13 @@ const SignUp = ({ navigation }: any) => {
             I have Read and agree to all Terms & Conditions and Privacy Policy.
           </Text>
         </View>
-        <TouchableOpacity
-          onPress={handleSignUp}
-          style={[styles.button, { backgroundColor: theme.COLORS.primary }]}
-        >
-          <Text style={{ color: theme.COLORS.background, ...FONTS.h4 }}>
-            Join Now
-          </Text>
-        </TouchableOpacity>
+     
+
+<CustomButton
+            title="Sign Up"
+            onPress={handleSignUp}
+            style={{ width: "90%", borderRadius: 8 }}
+          />
         <View
           style={{
             flex: 1,

@@ -1,6 +1,11 @@
-import URLService from './URLServices';
-import {EndPoints, baseUrl} from '../resources/Constants';
-import { signUpRequestBody } from './Modals';
+import URLService from "./URLServices";
+import { EndPoints, baseUrl } from "../resources/Constants";
+import {
+  loginBody,
+  resendOtpBody,
+  signUpRequestBody,
+  verifyOtpBody,
+} from "./Modals";
 
 export default class URLManager {
   getData(data: number) {
@@ -8,23 +13,40 @@ export default class URLManager {
     let urlPath = baseUrl + EndPoints.GETDATAENDPOINT + `${data}.json`;
     console.log(urlPath);
     return urlService
-      .fetchAsyncData(urlPath, data, 'GET')
+      .fetchAsyncData(urlPath, data, "GET")
       .then((res: any) => res);
   }
-  getProducts() {
-    let urlService = new URLService();
-    let urlPath = baseUrl + EndPoints.ALL_PRODUCTS;
-    console.log(urlPath);
-    return urlService
-      .fetchAsyncData(urlPath, {}, 'GET')
-      .then((res: any) => res);
-  }
+
   userOrTutorSignUp(data: signUpRequestBody) {
     let urlService = new URLService();
     let urlPath = baseUrl + EndPoints.SIGN_UP;
     console.log(urlPath);
     return urlService
-      .fetchAsyncData(urlPath, data, 'POST')
+      .fetchAsyncData(urlPath, data, "POST")
+      .then((res: any) => res);
+  }
+  verifyEmailOTP(data: verifyOtpBody) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.VERIFY_OTP;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, data, "POST")
+      .then((res: any) => res);
+  }
+  resendEmailOTP(data: resendOtpBody) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.RESEND_OTP;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, data, "POST")
+      .then((res: any) => res);
+  }
+  loginTutorOrStudent(data: loginBody) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.LOGIN;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, data, "POST")
       .then((res: any) => res);
   }
 }
