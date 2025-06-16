@@ -57,4 +57,20 @@ export default class URLManager {
       .fetchAsyncData(urlPath, {}, 'GET')
       .then((res: any) => res);
   }
+  getBanners() {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.GET_BANNERS;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, {}, 'GET')
+      .then((res: any) => res);
+  }
+  getProfile() {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.GET_PROFILE;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, {}, 'GET')
+      .then((res: any) => res);
+  }
 }

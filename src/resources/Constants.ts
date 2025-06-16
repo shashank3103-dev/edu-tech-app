@@ -8,7 +8,7 @@ export const kCLIENTVERSION = "1.2.1:" + platform;
 
 export const baseUrl =
   // 'http://10.0.2.2:11000'
- 'https://570d-2409-4085-810a-5f10-1015-6857-b2ee-c275.ngrok-free.app'
+  "https://394b-2409-40d2-1018-3df5-3962-3b27-680f-b590.ngrok-free.app";
 
 // Used for async storage
 export const storageKeys = {
@@ -26,7 +26,9 @@ export const EndPoints = {
   RESEND_OTP: "/api/user/resend-otp",
   SIGN_UP: "/api/user/signup",
   LOGIN: "/api/user/login",
-  GET_ALL_COURSE:'/api/course/getall'
+  GET_ALL_COURSE: "/api/course/getall",
+  GET_BANNERS: "/api/banner/getall",
+  GET_PROFILE: "/api/user/profile",
 };
 
 export default {
