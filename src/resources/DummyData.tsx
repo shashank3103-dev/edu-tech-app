@@ -25,3 +25,4 @@ export const eduServices = [
     image: ICONS.COURSE,
   },
 ];
+

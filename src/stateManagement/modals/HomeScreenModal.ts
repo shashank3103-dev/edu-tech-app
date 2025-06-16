@@ -54,3 +54,14 @@ export interface Work {
   occupation?: string;
   base?: string;
 }
+  export interface Course {
+    courseId: number;
+    title: string;
+    image: string;
+    tutor: string;
+    duration: string;
+    lectures: number;
+    learning_minutes: number;
+    price: string;
+    category: string;
+  };

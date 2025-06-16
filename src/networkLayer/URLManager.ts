@@ -49,4 +49,12 @@ export default class URLManager {
       .fetchAsyncData(urlPath, data, "POST")
       .then((res: any) => res);
   }
+  getAllCourses() {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.GET_ALL_COURSE;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, {}, 'GET')
+      .then((res: any) => res);
+  }
 }
