@@ -46,9 +46,14 @@ const Login = ({ navigation }: any) => {
         .then((res: any) => {
           if (!res.error) {
             console.log(res);
+            const user = res.user;
+            const role = user.tutor ? "tutor" : "student";
+
             UTILITIES.setDataInEncriptedStorage(storageKeys.kTOKEN, res.token);
+            UTILITIES.setDataInEncriptedStorage(storageKeys.kROLE, role);
+
             ToastAndroid.show(res.message, ToastAndroid.SHORT);
-            // navigation.navigate("BottomTabStack");
+
             navigation.reset({
               index: 0,
               routes: [{ name: "BottomTabStack" }],

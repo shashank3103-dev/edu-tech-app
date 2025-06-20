@@ -55,7 +55,7 @@ export interface Work {
   base?: string;
 }
   export interface Course {
-    courseId: number;
+    courseId: string;
     title: string;
     image: string;
     tutor: string;

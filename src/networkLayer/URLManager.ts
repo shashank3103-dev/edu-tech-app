@@ -1,9 +1,11 @@
 import URLService from "./URLServices";
 import { EndPoints, baseUrl } from "../resources/Constants";
 import {
+  cartBody,
   loginBody,
   resendOtpBody,
   signUpRequestBody,
+  uploadCourseBody,
   verifyOtpBody,
 } from "./Modals";
 
@@ -54,7 +56,7 @@ export default class URLManager {
     let urlPath = baseUrl + EndPoints.GET_ALL_COURSE;
     console.log(urlPath);
     return urlService
-      .fetchAsyncData(urlPath, {}, 'GET')
+      .fetchAsyncData(urlPath, {}, "GET")
       .then((res: any) => res);
   }
   getBanners() {
@@ -62,7 +64,7 @@ export default class URLManager {
     let urlPath = baseUrl + EndPoints.GET_BANNERS;
     console.log(urlPath);
     return urlService
-      .fetchAsyncData(urlPath, {}, 'GET')
+      .fetchAsyncData(urlPath, {}, "GET")
       .then((res: any) => res);
   }
   getProfile() {
@@ -70,7 +72,23 @@ export default class URLManager {
     let urlPath = baseUrl + EndPoints.GET_PROFILE;
     console.log(urlPath);
     return urlService
-      .fetchAsyncData(urlPath, {}, 'GET')
+      .fetchAsyncData(urlPath, {}, "GET")
+      .then((res: any) => res);
+  }
+  addToCart(data: cartBody) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.ADD_TO_CART;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, data, "POST")
+      .then((res: any) => res);
+  }
+  uploadCourse(data: uploadCourseBody) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.UPLOAD_COURSE;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, data, "POST")
       .then((res: any) => res);
   }
 }

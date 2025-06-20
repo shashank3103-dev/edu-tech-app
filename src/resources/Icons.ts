@@ -17,8 +17,28 @@ const COURSE = require("../assets/images/online-certificate.png");
 const SCHEDULE = require("../assets/images/calendar.png");
 const PROMOTION = require("../assets/images/marketing.png");
 const RECRUITMENT = require("../assets/images/search-user.png");
+const NO_IMAGE = require("../assets/images/image.png");
+const GLOBE = require("../assets/images/globe-earth.png");
+const TIMER = require("../assets/images/timer.png");
+const ACCESS = require("../assets/images/unlock.png");
+const LECTURES = require("../assets/images/video-lesson.png");
+const MARK = require("../assets/images/bookmark.png");
+const SECTION = require("../assets/images/grid.png");
+const UPLOAD = require("../assets/images/more.png");
+const UP_ARROW = require("../assets/images/up.png");
+const DOWN_ARROW = require("../assets/images/down-ed.png");
 
 export {
+  UP_ARROW,
+  DOWN_ARROW,
+  UPLOAD,
+  MARK,
+  SECTION,
+  GLOBE,
+  TIMER,
+  ACCESS,
+  LECTURES,
+  NO_IMAGE,
   SCHEDULE,
   PROMOTION,
   RECRUITMENT,

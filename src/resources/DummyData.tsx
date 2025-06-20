@@ -26,3 +26,8 @@ export const eduServices = [
   },
 ];
 
+export const COURSE_CATEGORY = [
+  {label: 'Basic', value: 'Basic'},
+  {label: 'Advanced', value: 'Advanced'},
+  {label: 'Basic to Advanced', value: 'Basic to Advanced'},
+];

@@ -82,8 +82,10 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
-import { useAppTheme } from "../resources/ThemeContext";
-import { FONTS, ICONS, SHADOW } from "../resources";
+import { useAppTheme } from "../../resources/ThemeContext";
+import { FONTS, ICONS } from "../../resources";
+// import { useAppTheme } from "../resources/ThemeContext";
+// import { FONTS, ICONS, SHADOW } from "../resources";
 
 
 const CommonHeader = ({

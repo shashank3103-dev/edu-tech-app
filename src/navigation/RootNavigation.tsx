@@ -8,6 +8,7 @@ import BottomTab from "./BottomTab";
 import ForgotPassword from "../screens/authentication/ForgotPassword";
 import SignUp from "../screens/authentication/SignUp";
 import OtpScreen from "../screens/authentication/OtpScreen";
+import CourseDetails from "../screens/courses/CourseDetails";
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
   const TransitionScreenOptions = {
@@ -46,6 +47,7 @@ const RootNavigation = () => {
           component={OtpScreen}
           options={{ headerShown: false, animation: "fade" }}
         />
+      
       </RootStack.Navigator>
     </NavigationContainer>
   );

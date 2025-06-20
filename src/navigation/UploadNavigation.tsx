@@ -1,19 +1,17 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "../screens/home/HomeScreen";
-import CourseDetails from "../screens/courses/CourseDetails";
+import CourseUpload from "../screens/upload/CourseUpload";
 
 const RootStack = createNativeStackNavigator();
-const HomeNavigation = () => {
+const UploadNavigation = () => {
   return (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
-      <RootStack.Screen name="HomeScreen" component={HomeScreen} />
-      <RootStack.Screen name="COURSE_DETAILS" component={CourseDetails} />
+      <RootStack.Screen name="CourseUpload" component={CourseUpload} />
     </RootStack.Navigator>
   );
 };
 
-export default HomeNavigation;
+export default UploadNavigation;
 
 const styles = StyleSheet.create({});

@@ -1,18 +1,15 @@
 import * as React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  Platform,
-} from "react-native";
+import { View, Text, TouchableOpacity, Image, Platform } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeNavigation from "./HomeNavigation";
 import LearnNavigation from "./LearnNavigation";
 import Profile from "../screens/profile/Profile";
 import BookingNavigation from "./BookingNavigation";
-import { ICONS } from "../resources";
+import { ICONS, UTILITIES } from "../resources";
 import { useAppTheme } from "../resources/ThemeContext"; // assuming this exists
+import UploadNavigation from "./UploadNavigation";
+import { useEffect, useState } from "react";
+import { storageKeys } from "../resources/Constants";
 
 function getIcons(routeName: string) {
   switch (routeName) {
@@ -20,6 +17,8 @@ function getIcons(routeName: string) {
       return ICONS.HOME;
     case "LearnNavigation":
       return ICONS.LEARN;
+    case "UploadNavigation":
+      return ICONS.UPLOAD;
     case "BookingNavigation":
       return ICONS.BOOKING;
     case "Profile":
@@ -123,13 +122,36 @@ function MyTabBar({ state, descriptors, navigation }: any) {
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const [role, setRole] = useState<"tutor" | "student" | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const savedRole = await UTILITIES.getDataFromEncriptedStorage(
+        storageKeys.kROLE
+      );
+      console.log("Loaded role from storage:", savedRole);
+      if (savedRole === "tutor" || savedRole === "student") {
+        setRole(savedRole);
+      } else {
+        setRole("student"); // fallback default
+      }
+      setLoading(false);
+    })();
+  }, []);
+
+  if (loading) return null;
   return (
     <Tab.Navigator
       screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true }}
       tabBar={(props) => <MyTabBar {...props} />}
     >
       <Tab.Screen name="HomeNavigation" component={HomeNavigation} />
-      <Tab.Screen name="LearnNavigation" component={LearnNavigation} />
+      {role === "tutor" ? (
+        <Tab.Screen name="UploadNavigation" component={UploadNavigation} />
+      ) : (
+        <Tab.Screen name="LearnNavigation" component={LearnNavigation} />
+      )}
       <Tab.Screen name="BookingNavigation" component={BookingNavigation} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>

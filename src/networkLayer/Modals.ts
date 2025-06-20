@@ -22,8 +22,32 @@ interface loginBody {
   email: string;
   password: string;
 }
-
+interface cartBody {
+  courseId: string;
+}
+interface uploadCourseBody { 
+  tittle: string;
+  category: string;
+  price: string;
+  description: string;
+  target: string;
+  requirements: string;
+  duration: string;
+  lectures: string;
+  learning_minutes: string;
+  courseImage:string;
+  is_published: boolean;
+ }
+interface SelectedImage {
+  uri: string;
+  type: string;
+  fileName?: string;
+  fileSize?: number;
+}
 export type {
+  uploadCourseBody,
+  SelectedImage,
+  cartBody,
   loginBody,
   PhoneRequestBody,
   VerifyOtpRequestBody,

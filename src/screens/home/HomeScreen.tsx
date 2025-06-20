@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -16,15 +17,17 @@ import AdCarousal from "../../components/AdCarousal";
 import { adData, eduServices } from "../../resources/DummyData";
 import { FONTS } from "../../resources/Theme";
 import URLManager from "../../networkLayer/URLManager";
-
-import CoursesCard from "../../components/homeComponents/CoursesCard";
 import { Course } from "../../stateManagement/modals/HomeScreenModal";
+import { ICONS } from "../../resources";
 
 const SERVICES = eduServices;
 const HomeScreen = ({ navigation }: any) => {
   const [loading, setLoading] = useState(false);
   const [courses, setCourses] = useState<Course[]>([]);
   const [banners, setBanners] = useState([]);
+  const [cartItems, setCartItems] = useState<string[]>([]);
+  const [showAllCourses, setShowAllCourses] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchCourseDetailApi();
@@ -117,6 +120,43 @@ const HomeScreen = ({ navigation }: any) => {
       console.log(er);
     }
   }
+
+  async function handleAddToCart(courseId: string) {
+    try {
+      setLoading(true);
+      let urlManager = new URLManager();
+      return urlManager
+        .addToCart({ courseId: courseId })
+        .then((res) => {
+          return res.json() as Promise<any>;
+        })
+        .then((res: any) => {
+          if (!res.error) {
+            console.log(res);
+
+            ToastAndroid.show(res.message, ToastAndroid.SHORT);
+            setCartItems((prev) => [...prev, courseId]);
+          } else {
+            if (res.error == "Failed to Add to Cart")
+              // Alert.alert("Error", res.error);
+              ToastAndroid.show(
+                res.error || "Failed to Add to Cart",
+                ToastAndroid.SHORT
+              );
+          }
+          console.log(res);
+        })
+        .catch((e) => {
+          Alert.alert(e.name, e.message);
+          return e.response;
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } catch (er) {
+      console.log(er);
+    }
+  }
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.COLORS.background }]}
@@ -130,6 +170,7 @@ const HomeScreen = ({ navigation }: any) => {
         contentContainerStyle={{ paddingBottom: 20 }}
       >
         <AdCarousal adData={adData} />
+
         <Text style={[FONTS.h3, { color: theme.COLORS.text, marginStart: 20 }]}>
           Our Services
         </Text>
@@ -139,22 +180,44 @@ const HomeScreen = ({ navigation }: any) => {
             data={SERVICES}
             renderItem={renderService}
             // keyExtractor={({ item }: any) => item.id}
-            horizontal
+            // horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.serviceList}
           />
         </View>
-        <Text style={[FONTS.h3, { color: theme.COLORS.text, marginStart: 20 }]}>
-          Our Courses
-        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginHorizontal: 20,
+          }}
+        >
+          <Text style={[FONTS.h3, { color: theme.COLORS.text }]}>
+            Our Courses
+          </Text>
+
+          <TouchableOpacity onPress={() => setShowAllCourses(!showAllCourses)}>
+            <Text
+              style={[
+                FONTS.body4,
+                {
+                  color: theme.COLORS.primary,
+                  textDecorationLine: "underline",
+                },
+              ]}
+            >
+              {showAllCourses ? "View Less" : "View More"}
+            </Text>
+          </TouchableOpacity>
+        </View>
         <FlatList
-          data={courses}
+          data={showAllCourses ? courses : courses.slice(0, 4)}
           keyExtractor={(item) => item.courseId.toString()}
           numColumns={2}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("CourseDetail", { courseId: item.courseId })
+                navigation.navigate("COURSE_DETAILS", { course: item })
               }
               style={{
                 backgroundColor: theme.COLORS.background,
@@ -169,7 +232,13 @@ const HomeScreen = ({ navigation }: any) => {
             >
               <Image
                 source={{ uri: item.image }}
-                style={{ width: "100%", height: 80, borderRadius: 8 }}
+                style={{
+                  width: "100%",
+                  height: 80,
+                  borderRadius: 8,
+                  borderColor: theme.COLORS.card,
+                  borderWidth: 0.5,
+                }}
                 resizeMode="cover"
               />
               <Text
@@ -193,29 +262,56 @@ const HomeScreen = ({ navigation }: any) => {
               </Text>
               <View
                 style={{
-                  // width: "50%",
-                  borderWidth: 0.7,
-                  borderColor: theme.COLORS.primary,
+                  alignSelf: "flex-start",
+                  backgroundColor: theme.COLORS.lightGreen,
+                  paddingHorizontal: 8,
+                  // paddingVertical: 4,
                   borderRadius: 10,
-                  // justifyContent:'center',
-                  // alignItems:'center',
+                  // marginTop: 8,
                 }}
               >
                 <Text
-                  style={[FONTS.body5, { color: theme.COLORS.gray }]}
+                  style={[FONTS.body6, { color: theme.COLORS.gray }]}
                   numberOfLines={1}
                 >
                   {item.category}
                 </Text>
               </View>
-              <Text
-                style={[
-                  FONTS.body5,
-                  { color: theme.COLORS.primary, marginTop: 4 },
-                ]}
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                }}
               >
-                ₹{parseFloat(item.price).toLocaleString()}
-              </Text>
+                <Text style={[FONTS.body5, { color: theme.COLORS.primary }]}>
+                  ₹{parseFloat(item.price).toLocaleString()}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (!cartItems.includes(item.courseId)) {
+                      handleAddToCart(item.courseId);
+                    }
+                  }}
+                  style={{
+                    marginLeft: "auto",
+                  }}
+                >
+                  <Image
+                    source={
+                      cartItems.includes(item.courseId)
+                        ? ICONS.ADD_TO_CART
+                        : ICONS.CART
+                    }
+                    style={{
+                      width: 20,
+                      height: 20,
+                      // marginLeft: "auto",
+                      tintColor: theme.COLORS.primary,
+                    }}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+              </View>
             </TouchableOpacity>
           )}
           showsVerticalScrollIndicator={false}
@@ -241,6 +337,8 @@ const styles = StyleSheet.create({
     padding: 7,
     height: 70,
     borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
     margin: 16,
   },
   loadingContainer: {
@@ -250,8 +348,9 @@ const styles = StyleSheet.create({
   },
   serviceCard: {
     flexDirection: "column",
-    borderRadius: 20,
-    width: 80,
+    borderRadius: 10,
+    width: 70,
+    padding: 5,
     alignItems: "center",
     justifyContent: "center",
   },

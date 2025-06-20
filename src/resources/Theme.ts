@@ -43,9 +43,9 @@ export const lightTheme = {
     text: "#000000",
     card: "#F6F6F6",
     primaryColor: '#0af',
-  
+    courseDetails: "#444",
     bottomBarBackground: '#121212',
-   
+   courseGray:"#999",
     textSecondary: '#ccc',
     iconInactive: '#777',
     border: '#222',
