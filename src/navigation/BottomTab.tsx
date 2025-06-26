@@ -127,7 +127,7 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
-      const savedRole = await UTILITIES.getDataFromEncriptedStorage(
+      const savedRole = await UTILITIES.getDataFromEncryptedStorage(
         storageKeys.kROLE
       );
       console.log("Loaded role from storage:", savedRole);

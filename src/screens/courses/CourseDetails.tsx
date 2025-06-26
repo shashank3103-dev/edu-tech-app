@@ -15,7 +15,7 @@ import { FONTS, ICONS } from "../../resources";
 
 const { width } = Dimensions.get("window");
 
-const CourseDetails = ({ route }: any) => {
+const CourseDetails = ({ route, navigation }: any) => {
   const theme = useAppTheme();
   const { course } = route.params;
 
@@ -292,6 +292,7 @@ const CourseDetails = ({ route }: any) => {
       <View style={[styles.footer, { backgroundColor: theme.COLORS.card }]}>
         <TouchableOpacity
           style={[styles.btn, { backgroundColor: theme.COLORS.primary }]}
+          
         >
           <Text style={[FONTS.h4, { color: theme.COLORS.text }]}>
             ADD TO CART
@@ -299,6 +300,10 @@ const CourseDetails = ({ route }: any) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.btn, { backgroundColor: theme.COLORS.secondary }]}
+          onPress={() => {
+            // Navigate to payment screen with course details
+            navigation.navigate("PAYMENT_SCREEN", {course: course});
+          }}
         >
           <Text style={[FONTS.h4, { color: theme.COLORS.text }]}>BUY NOW</Text>
         </TouchableOpacity>

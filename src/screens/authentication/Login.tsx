@@ -49,8 +49,8 @@ const Login = ({ navigation }: any) => {
             const user = res.user;
             const role = user.tutor ? "tutor" : "student";
 
-            UTILITIES.setDataInEncriptedStorage(storageKeys.kTOKEN, res.token);
-            UTILITIES.setDataInEncriptedStorage(storageKeys.kROLE, role);
+            UTILITIES.setDataInEncryptedStorage(storageKeys.kTOKEN, res.token);
+            UTILITIES.setDataInEncryptedStorage(storageKeys.kROLE, role);
 
             ToastAndroid.show(res.message, ToastAndroid.SHORT);
 

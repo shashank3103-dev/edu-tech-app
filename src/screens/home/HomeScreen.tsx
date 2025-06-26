@@ -225,7 +225,7 @@ const HomeScreen = ({ navigation }: any) => {
                 borderColor: theme.COLORS.card,
                 borderWidth: 1,
                 padding: 12,
-                height: 200,
+                // height: 250,
                 width: "47%", // Two cards per row with margin
                 margin: "1.5%",
               }}
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     padding: 7,
     height: 70,
     borderRadius: 12,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     margin: 16,
   },

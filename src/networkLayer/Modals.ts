@@ -44,7 +44,12 @@ interface SelectedImage {
   fileName?: string;
   fileSize?: number;
 }
+interface checkoutBody {
+  paymentMethod: any;
+  shippingAddress: string;
+}
 export type {
+  checkoutBody,
   uploadCourseBody,
   SelectedImage,
   cartBody,

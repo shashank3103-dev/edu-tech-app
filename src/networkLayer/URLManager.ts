@@ -2,6 +2,7 @@ import URLService from "./URLServices";
 import { EndPoints, baseUrl } from "../resources/Constants";
 import {
   cartBody,
+  checkoutBody,
   loginBody,
   resendOtpBody,
   signUpRequestBody,
@@ -86,6 +87,14 @@ export default class URLManager {
   uploadCourse(data: uploadCourseBody) {
     let urlService = new URLService();
     let urlPath = baseUrl + EndPoints.UPLOAD_COURSE;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, data, "POST")
+      .then((res: any) => res);
+  }
+  checkoutCourse(data: checkoutBody) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.CHECKOUT;
     console.log(urlPath);
     return urlService
       .fetchAsyncData(urlPath, data, "POST")
