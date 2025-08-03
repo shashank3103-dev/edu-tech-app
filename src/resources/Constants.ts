@@ -6,8 +6,9 @@ export const platform = Platform.OS;
 export const kHEADERLANGUAGE = "en_US";
 export const kCLIENTVERSION = "1.2.1:" + platform;
 
-export const baseUrl = "http://10.0.2.2:11000";
-// "https://13d6-2409-40d2-12b7-22e1-81c8-a364-3e49-c1f1.ngrok-free.app"; // Change this to your backend URL                                      ";
+export const baseUrl = 
+"http://10.0.2.2:11000";
+// "https://6bc6bf21f6e5.ngrok-free.app"; // Change this to your backend URL                                      ";
 
 // Used for async storage
 export const storageKeys = {

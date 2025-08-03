@@ -9,6 +9,7 @@ import {
   Dimensions,
   Alert,
   ToastAndroid,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useAppTheme} from '../../resources/ThemeContext';
@@ -19,29 +20,43 @@ import RazorpayCheckout from 'react-native-razorpay';
 const {width} = Dimensions.get('window');
 import {useSelector} from 'react-redux';
 import {RootState} from '../../stateManagement/Store';
+import {CourseData} from '../../stateManagement/modals/CourseDetails';
+import {useFocusEffect} from '@react-navigation/native';
 const CourseDetails = ({route, navigation}: any) => {
-   const user = useSelector((state: RootState) => state.auth.user);
+  const user = useSelector((state: RootState) => state.auth.user);
   const theme = useAppTheme();
   const {course} = route.params;
   const [loading, setLoading] = useState(false);
-  const [videos, setVideos] = useState([]);
+  const [expandedSections, setExpandedSections] = useState<number[]>([]);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [courseDetails, setCourseDetails] = useState<CourseData | null>(null);
   const courseId = course.courseId;
-  useEffect(() => {
-    fetchCourseLectures();
-  }, [courseId]);
-  async function fetchCourseLectures() {
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchCourseDetails();
+    }, [courseId]),
+  );
+  const toggleSection = (id: number) => {
+    if (expandedSections.includes(id)) {
+      setExpandedSections(prev => prev.filter(sectionId => sectionId !== id));
+    } else {
+      setExpandedSections(prev => [...prev, id]);
+    }
+  };
+  async function fetchCourseDetails() {
     try {
       setLoading(true);
       let urlManager = new URLManager();
       return urlManager
-        .getLecturesByCourseID(courseId)
+        .getCourseDetailsByCourseID(courseId)
         .then(res => res.json())
         .then((res: any) => {
-          const updatedData = res.map((video: {videoUrl: string}) => ({
-            ...video,
-            videoUrl: video.videoUrl.replace('localhost', '10.0.2.2'),
-          }));
-          setVideos(updatedData);
+          console.log(res, 'COURSES DETAILS');
+          if (res?.data) {
+            setCourseDetails(res.data);
+            setIsEnrolled(res.data?.enrolled);
+          }
         })
         .catch(e => {
           Alert.alert(e.name, e.message);
@@ -117,10 +132,7 @@ const CourseDetails = ({route, navigation}: any) => {
         });
     } catch (er) {
       console.log('Unexpected error:', er);
-      ToastAndroid.show(
-        'An unexpected error occurred.',
-        ToastAndroid.SHORT,
-      );
+      ToastAndroid.show('An unexpected error occurred.', ToastAndroid.SHORT);
     }
   }
   async function verifyPayment(paymentData: any) {
@@ -131,7 +143,7 @@ const CourseDetails = ({route, navigation}: any) => {
         razorpay_payment_id: paymentData.razorpay_payment_id,
         razorpay_order_id: paymentData.razorpay_order_id,
         razorpay_signature: paymentData.razorpay_signature,
-        courseId: course.courseId, 
+        courseId: course.courseId,
       };
       console.log('Verifying payment with payload:', payload);
       return urlManager
@@ -154,10 +166,7 @@ const CourseDetails = ({route, navigation}: any) => {
         })
         .catch(e => {
           console.log('Verification error:', e);
-          ToastAndroid.show(
-            'Failed to verify payment.',
-            ToastAndroid.SHORT,
-          );
+          ToastAndroid.show('Failed to verify payment.', ToastAndroid.SHORT);
           return e.response;
         })
         .finally(() => {
@@ -165,10 +174,7 @@ const CourseDetails = ({route, navigation}: any) => {
         });
     } catch (er) {
       console.log('Unexpected error:', er);
-      ToastAndroid.show(
-        'An unexpected error occurred.',
-        ToastAndroid.SHORT,
-      );
+      ToastAndroid.show('An unexpected error occurred.', ToastAndroid.SHORT);
     }
   }
   const formatDuration = (durationInSec: string) => {
@@ -188,7 +194,7 @@ const CourseDetails = ({route, navigation}: any) => {
       <CommonHeader title="Course detail" />
       <ScrollView contentContainerStyle={{paddingBottom: 100}}>
         <Image
-          source={{uri: course.image}}
+          source={{uri: courseDetails?.image}}
           style={styles.banner}
           resizeMode="cover"
         />
@@ -198,7 +204,7 @@ const CourseDetails = ({route, navigation}: any) => {
               FONTS.h2,
               {color: theme.COLORS.text, textTransform: 'capitalize'},
             ]}>
-            ₹ {parseFloat(course.price).toFixed(2).replace(/\.00$/, '')}
+            ₹ {parseFloat(courseDetails?.price).toFixed(2).replace(/\.00$/, '')}
           </Text>
         </View>
         <View style={styles.content}>
@@ -211,7 +217,7 @@ const CourseDetails = ({route, navigation}: any) => {
                 textTransform: 'capitalize',
               },
             ]}>
-            {course.category} course
+            {courseDetails?.category} course
           </Text>
           <Text
             style={[
@@ -222,7 +228,7 @@ const CourseDetails = ({route, navigation}: any) => {
                 textTransform: 'capitalize',
               },
             ]}>
-            {course.title}
+            {courseDetails?.title}
           </Text>
           <Text
             style={[
@@ -233,7 +239,7 @@ const CourseDetails = ({route, navigation}: any) => {
                 textTransform: 'capitalize',
               },
             ]}>
-            {course.description}
+            {courseDetails?.description}
           </Text>
           <View style={styles.badge}>
             <Text
@@ -241,7 +247,7 @@ const CourseDetails = ({route, navigation}: any) => {
                 FONTS.body6,
                 {color: theme.COLORS.black, textTransform: 'capitalize'},
               ]}>
-              {course.category}
+              {courseDetails?.category}
             </Text>
           </View>
           <Text
@@ -263,7 +269,7 @@ const CourseDetails = ({route, navigation}: any) => {
                   FONTS.body4,
                   {color: theme.COLORS.gray, textTransform: 'capitalize'},
                 ]}>
-                {course.learning_minutes} min
+                {courseDetails?.learning_minutes} min
               </Text>
             </View>
             <View style={styles.featureItem}>
@@ -291,7 +297,7 @@ const CourseDetails = ({route, navigation}: any) => {
                   FONTS.body4,
                   {color: theme.COLORS.gray, textTransform: 'capitalize'},
                 ]}>
-                {course.lectures} lectures
+                {courseDetails?.lectures} lectures
               </Text>
             </View>
             <View style={styles.featureItem}>
@@ -345,110 +351,178 @@ const CourseDetails = ({route, navigation}: any) => {
             This course require:
           </Text>
           <Text style={[styles.desc, {color: theme.COLORS.gray}]}>
-            Learn with ChatGPT and DALL-E! No prerequisites, just curiosity and
-            enthusiasm for cutting-edge tech.
+            {courseDetails?.requirements}
           </Text>
-          <Text style={[styles.desc, {color: theme.COLORS.gray}]}>
-            All you need is an internet connection, and congratulations - you
-            already have it! Time to unleash your inner artist with ChatGPT and
-            DALL-E.
-          </Text>
+
           <Text style={[styles.sectionTitle, {color: theme.COLORS.text}]}>
             This course target:
           </Text>
           <Text style={[styles.desc, {color: theme.COLORS.gray}]}>
-            • {course.target}
+            • {courseDetails?.target}
           </Text>
           <Text style={[styles.sectionTitle, {color: theme.COLORS.text}]}>
-            Course Videos:
+            Sections:
           </Text>
-          {loading ? (
-            <Text style={[styles.desc, {color: theme.COLORS.gray}]}>
-              Loading videos...
-            </Text>
-          ) : videos.length === 0 ? (
-            <Text style={[styles.desc, {color: theme.COLORS.gray}]}>
-              No videos available for this course.
-            </Text>
-          ) : (
-            videos.map((video: any, index: number) => {
-              const isFirstVideo = index === 0;
-              const isEnrolled = course.isEnrolled;
-              const canPlay = isFirstVideo || isEnrolled;
-              return (
+
+          {courseDetails?.Sections.map((section, sectionIndex) => {
+            const isExpanded = expandedSections.includes(section.sectionId);
+            return (
+              <View
+                key={section.sectionId}
+                style={{
+                  marginBottom: 16,
+                  marginTop: 10,
+                }}>
                 <TouchableOpacity
-                  key={index}
+                  onPress={() => toggleSection(section.sectionId)}
                   style={{
-                    marginVertical: 10,
-                    padding: 12,
-                    borderRadius: 8,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                     backgroundColor: theme.COLORS.card,
-                    opacity: canPlay ? 1 : 0.5,
-                  }}
-                  onPress={() => {
-                    if (canPlay) {
-                      navigation.navigate('VIDEO_PLAYER', {
-                        videoUrl: video.videoUrl,
-                        title: video.title,
-                      });
-                    } else {
-                      Alert.alert('Locked', 'Enroll to unlock this video.');
-                    }
+                    padding: 20,
+                    // marginTop: 10,
+                    // marginVertical: 10,
+                    borderRadius: 8,
                   }}>
-                  <View
+                  <Text
+                    style={[
+                      FONTS.h4,
+                      {
+                        color: theme.COLORS.text,
+                        textTransform: 'capitalize',
+                      },
+                    ]}>
+                    {sectionIndex + 1} - {section.title}
+                  </Text>
+                  <Image
+                    source={isExpanded ? ICONS.UP_ARROW : ICONS.DOWN_ARROW}
                     style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}>
-                    <View>
-                      <Text
-                        style={[
-                          FONTS.h4,
-                          {
-                            color: theme.COLORS.text,
-                            textTransform: 'capitalize',
-                          },
-                        ]}>
-                        {index + 1}. {video.title}
-                      </Text>
-                      <Text style={{color: theme.COLORS.gray}}>
-                        Video - {formatDuration(video.duration)}
-                      </Text>
-                    </View>
-                    <Image
-                      source={canPlay ? ICONS.VIDEO_PLAY : ICONS.SUBSCRIPTION}
-                      style={{
-                        width: 24,
-                        height: 24,
-                        tintColor: canPlay
-                          ? theme.COLORS.primary
-                          : theme.COLORS.golden,
-                        marginLeft: 12,
-                      }}
-                      resizeMode="contain"
-                    />
-                  </View>
+                      width: 15,
+                      height: 15,
+                      tintColor: theme.COLORS.text,
+                      marginLeft: 12,
+                    }}
+                  />
                 </TouchableOpacity>
-              );
-            })
-          )}
+
+                {isExpanded &&
+                  section.Videos.map((video, videoIndex) => {
+                    const isFirstVideo = sectionIndex === 0 && videoIndex === 0;
+                    const isEnrolled = courseDetails.enrolled;
+                    const canPlay = isFirstVideo || isEnrolled;
+
+                    return (
+                      <TouchableOpacity
+                        key={video.videoId}
+                        style={{
+                          // marginVertical: 6,
+                          padding: 12,
+                          borderRadius: 12,
+                          // backgroundColor: theme.COLORS.card,
+                          borderBottomColor: theme.COLORS.card,
+                          borderBottomWidth: 2,
+                          opacity: canPlay ? 1 : 0.5,
+                        }}
+                        onPress={() => {
+                          if (canPlay) {
+                            navigation.navigate('VIDEO_PLAYER', {
+                              videoUrl: video.videoUrl,
+                              title: video.title,
+                            });
+                          } else {
+                            Alert.alert(
+                              'Locked',
+                              'Enroll to unlock this video.',
+                            );
+                          }
+                        }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                          }}>
+                          <View>
+                            <Text
+                              style={[
+                                FONTS.h4,
+                                {
+                                  color: theme.COLORS.text,
+                                  textTransform: 'capitalize',
+                                },
+                              ]}>
+                              {videoIndex + 1}. {video.title}
+                            </Text>
+                            <Text style={{color: theme.COLORS.gray}}>
+                              Video - {formatDuration(video.duration)}
+                            </Text>
+                          </View>
+                          <Image
+                            source={
+                              canPlay ? ICONS.VIDEO_PLAY : ICONS.SUBSCRIPTION
+                            }
+                            style={{
+                              width: 24,
+                              height: 24,
+                              tintColor: canPlay
+                                ? theme.COLORS.primary
+                                : theme.COLORS.golden,
+                              marginLeft: 12,
+                            }}
+                            resizeMode="contain"
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
+              </View>
+            );
+          })}
         </View>
       </ScrollView>
+      {!isEnrolled && (
       <View style={[styles.footer, {backgroundColor: theme.COLORS.card}]}>
+      
+        <Text
+          style={[
+            FONTS.h1,
+            {
+              color: theme.COLORS.text,
+              textTransform: 'capitalize',
+              padding: 12,
+              // borderRadius: 8,
+
+              alignItems: 'center',
+            },
+          ]}>
+          ₹ {parseFloat(courseDetails?.price).toFixed(2).replace(/\.00$/, '')}
+        </Text>
         <TouchableOpacity
-          style={[styles.btn, {backgroundColor: theme.COLORS.primary}]}>
-          <Text style={[FONTS.h4, {color: theme.COLORS.text}]}>
-            ADD TO CART
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.btn, {backgroundColor: theme.COLORS.secondary}]}
           onPress={handleBuyNow}
-        >
-          <Text style={[FONTS.h4, {color: theme.COLORS.text}]}>BUY NOW</Text>
+          style={[
+            {
+              width: '50%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              // marginTop: 10,
+              paddingVertical: 12,
+              paddingHorizontal: 20,
+              borderRadius: 8,
+              flexDirection: 'row',
+            },
+            {backgroundColor: theme.COLORS.primary},
+          ]}>
+          {loading ? (
+            <ActivityIndicator size="small" color={theme.COLORS.background} />
+          ) : (
+            <Text style={{color: theme.COLORS.background, ...FONTS.h3}}>
+              Buy Now
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -484,6 +558,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '100%',
     justifyContent: 'space-between',
+    // alignItems: 'center',
     gap: 10,
   },
   btn: {flex: 1, padding: 12, borderRadius: 8, alignItems: 'center'},
