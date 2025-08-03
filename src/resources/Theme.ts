@@ -49,6 +49,7 @@ export const lightTheme = {
     textSecondary: '#ccc',
     iconInactive: '#777',
     border: '#222',
+    golden:'#E5C100'
   },
   ...COMMON,
 };

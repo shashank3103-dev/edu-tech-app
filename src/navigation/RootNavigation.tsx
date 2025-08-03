@@ -9,6 +9,7 @@ import ForgotPassword from "../screens/authentication/ForgotPassword";
 import SignUp from "../screens/authentication/SignUp";
 import OtpScreen from "../screens/authentication/OtpScreen";
 import CourseDetails from "../screens/courses/CourseDetails";
+import VideoPlayer from "../components/videoPlayer";
 const RootStack = createNativeStackNavigator();
 const RootNavigation = () => {
   const TransitionScreenOptions = {
@@ -45,6 +46,11 @@ const RootNavigation = () => {
         <RootStack.Screen
           name="OTP"
           component={OtpScreen}
+          options={{ headerShown: false, animation: "fade" }}
+        />
+        <RootStack.Screen
+          name="VIDEO_PLAYER"
+          component={VideoPlayer}
           options={{ headerShown: false, animation: "fade" }}
         />
       

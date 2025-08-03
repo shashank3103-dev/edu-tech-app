@@ -4,6 +4,8 @@ import {
   cartBody,
   checkoutBody,
   loginBody,
+  orderPaymentBody,
+  razorpayVerificationBody,
   resendOtpBody,
   signUpRequestBody,
   uploadCourseBody,
@@ -98,6 +100,38 @@ export default class URLManager {
     console.log(urlPath);
     return urlService
       .fetchAsyncData(urlPath, data, "POST")
+      .then((res: any) => res);
+  }
+  getLecturesByCourseID(courseId: number) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.GET_LECTURES + courseId;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, {}, "GET")
+      .then((res: any) => res);
+  }
+  paymentOrder(data: orderPaymentBody) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.PAYMENT_ORDER;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, data, "POST")
+      .then((res: any) => res);
+  }
+  paymentVerify(data: razorpayVerificationBody) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.PAYMENT_VERIFY;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, data, "POST")
+      .then((res: any) => res);
+  }
+  getCourseDetailsByCourseID(courseId: number) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.GET_COURSE_DETAILS + courseId;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, {}, "GET")
       .then((res: any) => res);
   }
 }

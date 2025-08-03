@@ -27,8 +27,12 @@ const SECTION = require("../assets/images/grid.png");
 const UPLOAD = require("../assets/images/more.png");
 const UP_ARROW = require("../assets/images/up.png");
 const DOWN_ARROW = require("../assets/images/down-ed.png");
+const VIDEO_PLAY = require("../assets/images/video.png");
+const SUBSCRIPTION = require("../assets/images/crown.png");
 
 export {
+  SUBSCRIPTION,
+  VIDEO_PLAY,
   UP_ARROW,
   DOWN_ARROW,
   UPLOAD,

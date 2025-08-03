@@ -105,8 +105,10 @@ const HomeScreen = ({ navigation }: any) => {
         })
         .then(async (res: any) => {
           console.log(res, "BANNERS DETAILS");
-          if (res) {
-            setBanners(res);
+          if (res?.banners && Array.isArray(res.banners)) {
+            setBanners(res.banners);
+          } else {
+            console.warn("Banners not in expected format 👀");
           }
         })
         .catch((e) => {
@@ -169,7 +171,7 @@ const HomeScreen = ({ navigation }: any) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 20 }}
       >
-        <AdCarousal adData={adData} />
+        <AdCarousal adData={banners} />
 
         <Text style={[FONTS.h3, { color: theme.COLORS.text, marginStart: 20 }]}>
           Our Services

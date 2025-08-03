@@ -1,52 +1,40 @@
 import {
   ActivityIndicator,
-  Image,
-  StyleProp,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-  ViewProps,
   ViewStyle,
 } from "react-native";
 import React from "react";
-import { COLORS, FONTS, ICONS } from "../resources";
+import {  FONTS } from "../resources";
 import { useAppTheme } from "../resources/ThemeContext";
 
 interface BtnProps {
-  style: ViewStyle;
+  style?: ViewStyle;
   loading?: boolean;
   title: string;
   onPress: () => void;
 }
-const CustomButton = (props: BtnProps) => {
+
+const CustomButton = ({ style, title, onPress, loading = false }: BtnProps) => {
   const theme = useAppTheme();
-  const { style, title, onPress, loading = false } = props;
+
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={!loading ? onPress : undefined} // disable press when loading
+      activeOpacity={loading ? 1 : 0.7} // don't animate when loading
       style={[
-        {
-          backgroundColor: theme.COLORS.primary,
-          marginTop: "5%",
-          padding: "4%",
-          justifyContent: "center",
-          alignItems: "center",
-          alignSelf: "center",
-          flexDirection: "row",
-        },
+        styles.button,
+        { backgroundColor: theme.COLORS.primary },
         style,
+        loading && styles.disabled, // add dim effect if needed
       ]}
+      disabled={loading}
     >
       {loading ? (
         <ActivityIndicator size="small" color={theme.COLORS.text} />
       ) : (
-        <Text
-          style={{
-            color: theme.COLORS.background,
-            ...FONTS.h3,
-          }}
-        >
+        <Text style={[styles.title, { color: theme.COLORS.background }]}>
           {title}
         </Text>
       )}
@@ -56,4 +44,21 @@ const CustomButton = (props: BtnProps) => {
 
 export default CustomButton;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  button: {
+    marginTop: "5%",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    borderRadius: 8,
+    flexDirection: "row",
+  },
+  title: {
+    ...FONTS.h3,
+  },
+  disabled: {
+    opacity: 0.7,
+  },
+});

@@ -2,7 +2,7 @@ import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect } from "react";
 import { useAppTheme } from "../../resources/ThemeContext";
 import { ICONS } from "../../resources";
-import { getDataFromEncriptedStorage } from "../../resources/Utilities";
+import { getDataFromEncryptedStorage } from "../../resources/Utilities";
 import { storageKeys } from "../../resources/Constants";
 
 const SplashScreen = ({ navigation }: any) => {
@@ -15,7 +15,7 @@ const SplashScreen = ({ navigation }: any) => {
     return () => clearTimeout(timer);
   }, [navigation]);
   const handleNavigation = async () => {
-    const token = await getDataFromEncriptedStorage(storageKeys.kTOKEN);
+    const token = await getDataFromEncryptedStorage(storageKeys.kTOKEN);
     if (token) {
       navigation.replace("BottomTabStack");
     } else {

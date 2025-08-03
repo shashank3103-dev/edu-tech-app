@@ -33,6 +33,10 @@ export const EndPoints = {
   GET_CART: "/api/order/cart/get",
   UPLOAD_COURSE: "/api/course/upload",
   CHECKOUT: "/api/order/checkout",
+  GET_LECTURES: "/api/video/course/",
+  PAYMENT_ORDER: "/api/payment/order",
+  PAYMENT_VERIFY: "/api/payment/verify",
+  GET_COURSE_DETAILS: "/api/course/get-course-details/",
 };
 
 export default {

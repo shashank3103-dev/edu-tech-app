@@ -56,8 +56,7 @@ const SignUp = ({ navigation }: any) => {
             console.log(res);
             navigation.navigate("OTP", { email: payload.email });
           } else {
-        
-              Alert.alert("Error", res.error);
+            Alert.alert("Error", res.error);
           }
           console.log(res);
         })
@@ -282,13 +281,37 @@ const SignUp = ({ navigation }: any) => {
             I have Read and agree to all Terms & Conditions and Privacy Policy.
           </Text>
         </View>
-     
 
-<CustomButton
-            title="Sign Up"
-            onPress={handleSignUp}
-            style={{ width: "90%", borderRadius: 8 }}
-          />
+        {/* <CustomButton
+          title="Sign Up"
+          onPress={handleSignUp}
+          style={{ width: "90%", borderRadius: 8 }}
+           loading={loading}
+        /> */}
+        <TouchableOpacity
+          onPress={handleSignUp}
+          style={[
+            {
+              width: "90%",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 10,
+              paddingVertical: 12,
+              paddingHorizontal: 20,
+              borderRadius: 8,
+              flexDirection: "row",
+            },
+            { backgroundColor: theme.COLORS.primary },
+          ]}
+        >
+          {loading ? (
+            <ActivityIndicator size="small" color={theme.COLORS.background} />
+          ) : (
+            <Text style={{ color: theme.COLORS.background, ...FONTS.h4 }}>
+              Sign Up
+            </Text>
+          )}
+        </TouchableOpacity>
         <View
           style={{
             flex: 1,

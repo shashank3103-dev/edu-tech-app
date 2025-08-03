@@ -15,11 +15,16 @@ import {
 import { TextInput } from "react-native-paper";
 import { useAppTheme } from "../../resources/ThemeContext";
 import { FONTS, SHADOW } from "../../resources/Theme";
-import { COLORS, ICONS, UTILITIES } from "../../resources";
+import {  ICONS, UTILITIES } from "../../resources";
 import URLManager from "../../networkLayer/URLManager";
 import { storageKeys } from "../../resources/Constants";
 import CustomButton from "../../components/CustomButton";
+import {useDispatch} from 'react-redux';
+import {setUserData} from '../../stateManagement/slices/authSlice';
+
+
 const Login = ({ navigation }: any) => {
+  const dispatch = useDispatch();
   const theme = useAppTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,8 +52,16 @@ const Login = ({ navigation }: any) => {
           if (!res.error) {
             console.log(res);
             const user = res.user;
-            const role = user.tutor ? "tutor" : "student";
+            const role = user.tutor ? 'tutor' : 'student';
 
+            dispatch(
+              setUserData({
+                user: user,
+                token: res.token,
+                role: role as 'student' | 'tutor' | 'admin',
+              }),
+            );
+console.log(dispatch,'dispatch');
             UTILITIES.setDataInEncryptedStorage(storageKeys.kTOKEN, res.token);
             UTILITIES.setDataInEncryptedStorage(storageKeys.kROLE, role);
 
@@ -56,7 +69,7 @@ const Login = ({ navigation }: any) => {
 
             navigation.reset({
               index: 0,
-              routes: [{ name: "BottomTabStack" }],
+              routes: [{name: 'BottomTabStack'}],
             });
           } else {
             ToastAndroid.show(res.error || "Login failed", ToastAndroid.SHORT);

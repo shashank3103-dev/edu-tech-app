@@ -48,7 +48,18 @@ interface checkoutBody {
   paymentMethod: any;
   shippingAddress: string;
 }
+interface orderPaymentBody {
+  courseId: number;
+}
+interface razorpayVerificationBody {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+  courseId: number | string; // adjust based on your DB type
+}
 export type {
+  razorpayVerificationBody,
+  orderPaymentBody,
   checkoutBody,
   uploadCourseBody,
   SelectedImage,
