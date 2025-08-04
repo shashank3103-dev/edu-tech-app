@@ -57,7 +57,11 @@ interface razorpayVerificationBody {
   razorpay_signature: string;
   courseId: number | string; // adjust based on your DB type
 }
+interface sendFCMTokenBody {
+  token: string;
+}
 export type {
+  sendFCMTokenBody,
   razorpayVerificationBody,
   orderPaymentBody,
   checkoutBody,

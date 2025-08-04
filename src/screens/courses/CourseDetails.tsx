@@ -481,7 +481,7 @@ const CourseDetails = ({route, navigation}: any) => {
           })}
         </View>
       </ScrollView>
-      {!isEnrolled && (
+      {/* {!isEnrolled && ( */}
       <View style={[styles.footer, {backgroundColor: theme.COLORS.card}]}>
       
         <Text
@@ -522,7 +522,7 @@ const CourseDetails = ({route, navigation}: any) => {
           )}
         </TouchableOpacity>
       </View>
-      )}
+      {/* // )} */}
     </SafeAreaView>
   );
 };

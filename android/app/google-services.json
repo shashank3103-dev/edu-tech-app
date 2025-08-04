@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "236327787747",
+    "project_id": "education-a1b78",
+    "storage_bucket": "education-a1b78.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236327787747:android:b175036b7961c06b9fb9d6",
+        "android_client_info": {
+          "package_name": "com.edumate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB29edc0B6f9jujerhfK0RjarisNZB9MkA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

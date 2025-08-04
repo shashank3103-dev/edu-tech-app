@@ -7,6 +7,7 @@ import {
   orderPaymentBody,
   razorpayVerificationBody,
   resendOtpBody,
+  sendFCMTokenBody,
   signUpRequestBody,
   uploadCourseBody,
   verifyOtpBody,
@@ -132,6 +133,14 @@ export default class URLManager {
     console.log(urlPath);
     return urlService
       .fetchAsyncData(urlPath, {}, "GET")
+      .then((res: any) => res);
+  }
+  sendFCMToken(data: sendFCMTokenBody) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.SEND_FCM_TOKEN;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, data, "POST")
       .then((res: any) => res);
   }
 }

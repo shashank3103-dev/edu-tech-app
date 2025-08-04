@@ -61,7 +61,7 @@ const Login = ({ navigation }: any) => {
                 role: role as 'student' | 'tutor' | 'admin',
               }),
             );
-console.log(dispatch,'dispatch');
+
             UTILITIES.setDataInEncryptedStorage(storageKeys.kTOKEN, res.token);
             UTILITIES.setDataInEncryptedStorage(storageKeys.kROLE, role);
 

@@ -12,6 +12,7 @@ export const baseUrl =
 
 // Used for async storage
 export const storageKeys = {
+  kFCM_TOKEN: "fcmToken",
   kROLE: "role",
   kTOKEN: "token",
   kEMAIL: "email",
@@ -38,6 +39,7 @@ export const EndPoints = {
   PAYMENT_ORDER: "/api/payment/order",
   PAYMENT_VERIFY: "/api/payment/verify",
   GET_COURSE_DETAILS: "/api/course/get-course-details/",
+  SEND_FCM_TOKEN: "/api/user/save-fcm-token"
 };
 
 export default {
