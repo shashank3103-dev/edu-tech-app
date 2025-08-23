@@ -33,8 +33,6 @@ interface uploadCourseBody {
   target: string;
   requirements: string;
   duration: string;
-  lectures: string;
-  learning_minutes: string;
   courseImage:string;
   is_published: boolean;
  }
@@ -60,7 +58,17 @@ interface razorpayVerificationBody {
 interface sendFCMTokenBody {
   token: string;
 }
+interface googleAuthLoginBody{
+  idToken: any;
+}
+interface createLiveClassBody {
+  courseId: number;
+  title: string;
+  startsAt: string; // ISO date string
+}
 export type {
+  createLiveClassBody,
+  googleAuthLoginBody,
   sendFCMTokenBody,
   razorpayVerificationBody,
   orderPaymentBody,

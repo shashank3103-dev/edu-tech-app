@@ -25,16 +25,15 @@ const CustomButton = ({ style, title, onPress, loading = false }: BtnProps) => {
       activeOpacity={loading ? 1 : 0.7} // don't animate when loading
       style={[
         styles.button,
-        { backgroundColor: theme.COLORS.primary },
+        {backgroundColor: theme.COLORS.primary},
         style,
         loading && styles.disabled, // add dim effect if needed
       ]}
-      disabled={loading}
-    >
+      disabled={loading}>
       {loading ? (
-        <ActivityIndicator size="small" color={theme.COLORS.text} />
+        <ActivityIndicator size='small' color={theme.COLORS.background} />
       ) : (
-        <Text style={[styles.title, { color: theme.COLORS.background }]}>
+        <Text style={[styles.title, {color: theme.COLORS.background}]}>
           {title}
         </Text>
       )}

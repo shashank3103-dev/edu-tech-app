@@ -12,7 +12,20 @@
           "package_name": "com.edumate"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "236327787747-gi42anr1st7o4esq99lqg3bkgpiuq1mv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.edumate",
+            "certificate_hash": "d6273c8e9c5c15d5d14523c0704f44174919139f"
+          }
+        },
+        {
+          "client_id": "236327787747-1ma7rem6hkoo5mokco6mpb0ul838ds3k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB29edc0B6f9jujerhfK0RjarisNZB9MkA"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "236327787747-1bn1n7aln63ut71shudqa5mf0l973ao8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

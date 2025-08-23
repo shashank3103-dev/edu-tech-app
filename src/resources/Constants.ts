@@ -8,7 +8,7 @@ export const kCLIENTVERSION = "1.2.1:" + platform;
 
 export const baseUrl = 
 "http://10.0.2.2:11000";
-// "https://6bc6bf21f6e5.ngrok-free.app"; // Change this to your backend URL                                      ";
+// "https://education-plateform-backend-production.up.railway.app"; // Change this to your backend URL                                   
 
 // Used for async storage
 export const storageKeys = {
@@ -39,7 +39,14 @@ export const EndPoints = {
   PAYMENT_ORDER: "/api/payment/order",
   PAYMENT_VERIFY: "/api/payment/verify",
   GET_COURSE_DETAILS: "/api/course/get-course-details/",
-  SEND_FCM_TOKEN: "/api/user/save-fcm-token"
+  SEND_FCM_TOKEN: "/api/user/save-fcm-token",
+  GET_NOTIFICATION: '/api/notifications/get-notification',
+  GOOGLE_AUTH: '/api/user/auth/google-login',
+  CREATE_LIVE_CLASS: '/api/live/sessions',
+  LIVE_CLASS: '/api/live/sessions/',
+  TUTOR_DASHBOARD: '/api/course/tutor/dashboard',
+  TUTOR_BOOKING: "/api/enroll/my-enrollments"
+
 };
 
 export default {

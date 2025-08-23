@@ -17,22 +17,25 @@ import { UTILITIES } from "../resources";
 //     getFcmToken();
 //   }
 // };
- export const requestUserPermission = async () => {
-    if (Platform.OS === "android") {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
-      );
+export const requestUserPermission = async () => {
+  if (Platform.OS === "android") {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+    );
 
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("✅ Notification permission granted");
-        await getFcmToken();
-      } else {
-        Alert.alert("⚠️ Permission Denied", "Notification permission is required for push notifications");
-      }
-    } else {
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log("✅ Notification permission granted");
       await getFcmToken();
+    } else {
+      Alert.alert(
+        "⚠️ Permission Denied",
+        "Notification permission is required for push notifications"
+      );
     }
-  };
+  } else {
+    await getFcmToken();
+  }
+};
 
 export const getFcmToken = async () => {
   try {
@@ -80,15 +83,49 @@ export const showLocalNotification = async (remoteMessage: any) => {
   });
 
   await notifee.displayNotification({
-    title: remoteMessage.notification?.title,
-    body: remoteMessage.notification?.body,
+    title: remoteMessage.notification?.title || "🔔 New Notification",
+    body: remoteMessage.notification?.body || "You have a new message!",
     android: {
       channelId: "default",
-      smallIcon: "ic_launcher", // ensure you have this in android
+      smallIcon: "ic_stat_logo", // ensure you have this in android
+      largeIcon: "ic_launcher",
+      sound: "default", // system notification sound
+      vibrationPattern: [300, 500], // vibrate 300ms, pause 500ms
+      pressAction: {
+        id: "default", // handles what happens when clicked
+      },
     },
   });
 };
 
 export const backgroundMessageHandler = async (remoteMessage: any) => {
   console.log("📩 FCM Background Message:", remoteMessage);
+  
 };
+
+export async function fetchUserNotifications() {
+  try {
+    let urlManager = new URLManager();
+    return urlManager
+      .getNotification()
+      .then((res) => {
+        console.log(res);
+        return res.json() as Promise<any>;
+      })
+      .then(async (res: any) => {
+        console.log(res.notifications, "NOTIFICATION");
+        if (res?.notifications) {
+                return res?.notifications;
+        }
+      })
+      .catch((e) => {
+        Alert.alert(e.name, e.message);
+        return e.response;
+      })
+      .finally(() => {
+        //    setLoading(false);
+      });
+  } catch (er) {
+    console.log(er);
+  }
+}

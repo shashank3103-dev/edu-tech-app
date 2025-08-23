@@ -1,39 +1,47 @@
 import {
-  ActivityIndicator,
-  Alert,
   Image,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
-} from "react-native";
-import React, { useState } from "react";
-import { useAppTheme } from "../../resources/ThemeContext";
-import { FONTS, ICONS } from "../../resources";
-import { TextInput } from "react-native-paper";
-import CheckBox from "react-native-check-box";
-import URLManager from "../../networkLayer/URLManager";
-import CustomButton from "../../components/CustomButton";
-const SignUp = ({ navigation }: any) => {
+} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import React, {useState} from 'react';
+import {useAppTheme} from '../../resources/ThemeContext';
+import {FONTS, ICONS} from '../../resources';
+import CheckBox from 'react-native-check-box';
+import URLManager from '../../networkLayer/URLManager';
+import CustomButton from '../../components/CustomButton';
+import CustomTextInput from '../../components/CustomTextInput';
+import {validateSignUpData} from '../../utils/validators';
+const SignUp = ({navigation}: any) => {
   const theme = useAppTheme();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [role, setRole] = useState<"tutor" | "student" | "">("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [role, setRole] = useState<'tutor' | 'student' | ''>('');
   const [isTerms, setTerms] = useState(false);
   const [loading, setLoading] = useState(false);
 
+ 
   async function handleSignUp() {
     try {
       setLoading(true);
-      if (!name || !email || !password || !phone || !role || !isTerms) {
-        Alert.alert(
-          "Validation Error",
-          "Please fill all fields and accept terms."
-        );
+      const errorMsg = validateSignUpData({
+        name,
+        email,
+        phone,
+        password,
+        confirmPassword,
+        role,
+        isTerms,
+      });
+      if (errorMsg) {
+        ToastAndroid.show(errorMsg, ToastAndroid.LONG);
         setLoading(false);
         return;
       }
@@ -48,20 +56,20 @@ const SignUp = ({ navigation }: any) => {
       console.log(payload);
       return urlManager
         .userOrTutorSignUp(payload)
-        .then((res) => {
+        .then(res => {
           return res.json() as Promise<any>;
         })
         .then((res: any) => {
           if (!res.error) {
             console.log(res);
-            navigation.navigate("OTP", { email: payload.email });
+            navigation.navigate('OTP', {email: payload.email});
           } else {
-            Alert.alert("Error", res.error);
+            ToastAndroid.show(res.error, ToastAndroid.LONG);
           }
           console.log(res);
         })
-        .catch((e) => {
-          Alert.alert(e.name, e.message);
+        .catch(e => {
+          ToastAndroid.show(e.message, ToastAndroid.LONG);
           return e.response;
         })
         .finally(() => {
@@ -78,39 +86,18 @@ const SignUp = ({ navigation }: any) => {
           flex: 1,
           padding: 20,
         },
-        { backgroundColor: theme.COLORS.background },
-      ]}
-    >
-      <TouchableOpacity
-        style={{
-          alignSelf: "flex-end",
-          flexDirection: "row",
-          alignItems: "center",
-          marginTop: 20,
-        }}
-        // onPress={() => navigation.navigate("BottomTabStack")}
-      >
-        <Text style={[FONTS.h3, { color: theme.COLORS.text }]}>Skip</Text>
-        <Image
-          source={ICONS.RIGHT_ARROW}
-          style={{
-            width: 13,
-            height: 13,
-            marginLeft: 5,
-            tintColor: theme.COLORS.text,
-          }}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
-      <ScrollView
+        {backgroundColor: theme.COLORS.background},
+      ]}>
+      <KeyboardAwareScrollView
         contentContainerStyle={{
           flexGrow: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          paddingBottom: 30,
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
         showsVerticalScrollIndicator={false}
-      >
+        enableOnAndroid={true}
+        extraScrollHeight={10} // pushes input a bit above keyboard
+        keyboardShouldPersistTaps="handled">
         <Image
           source={ICONS.APP_LOGO_ICON}
           style={{
@@ -120,149 +107,95 @@ const SignUp = ({ navigation }: any) => {
           }}
           resizeMode="contain"
         />
-        <Text style={[FONTS.h2, { color: theme.COLORS.text }]}>
+        <Text style={[FONTS.h2, {color: theme.COLORS.text}]}>
           Create Your Account
         </Text>
         <Text
           style={[
             FONTS.body5,
-            { color: theme.COLORS.text, textAlign: "center", marginBottom: 20 },
-          ]}
-        >
+            {color: theme.COLORS.text, textAlign: 'center', marginBottom: 20},
+          ]}>
           Sign up as a student or a tutor and start your educational journey
           with us.
         </Text>
 
-        <TextInput
-          label="First Name"
-          mode="outlined"
-          keyboardType="email-address"
+        <CustomTextInput
+          label="Full Name"
           value={name}
-          onChangeText={(text) => {
-            setName(text);
-          }}
-          style={{
-            width: "90%",
-            marginBottom: 10,
-          }}
-          theme={{
-            colors: {
-              text: theme.COLORS.text,
-              primary: theme.COLORS.text,
-              background: theme.COLORS.background,
-              placeholder: "#999",
-            },
-          }}
+          onChangeText={setName}
+          leftIcon="account"
         />
 
-        <TextInput
+        <CustomTextInput
           label="Email Address"
-          mode="outlined"
-          keyboardType="email-address"
           value={email}
-          onChangeText={(text) => {
-            setEmail(text);
-          }}
-          style={{
-            width: "90%",
-            marginBottom: 10,
-          }}
-          theme={{
-            colors: {
-              text: theme.COLORS.text,
-              primary: theme.COLORS.text,
-              background: theme.COLORS.background,
-              placeholder: "#999",
-            },
-          }}
+          onChangeText={setEmail}
+          leftIcon="email"
+          keyboardType='email-address'
         />
-        <TextInput
-          label="Phone Number"
-          mode="outlined"
-          keyboardType="number-pad"
+        <CustomTextInput
+          label="Mobile Number"
           value={phone}
-          onChangeText={(text) => {
-            setPhone(text);
-          }}
-          style={{
-            width: "90%",
-            marginBottom: 10,
-          }}
-          theme={{
-            colors: {
-              text: theme.COLORS.text,
-              primary: theme.COLORS.text,
-              background: theme.COLORS.background,
-              placeholder: "#999",
-            },
-          }}
+          onChangeText={setPhone}
+          leftIcon="phone"
+          keyboardType='number-pad'
         />
-        <TextInput
-          label="Password"
-          mode="outlined"
-          // secureTextEntry
-          keyboardType="visible-password"
+        <CustomTextInput
+          label="Set Password"
           value={password}
-          onChangeText={(text) => {
-            setPassword(text);
-          }}
-          style={{
-            width: "90%",
-            marginBottom: 10,
-          }}
-          theme={{
-            colors: {
-              text: theme.COLORS.text,
-              primary: theme.COLORS.text,
-              background: theme.COLORS.background,
-              placeholder: "#999",
-            },
-          }}
+          onChangeText={setPassword}
+          secure
+          leftIcon="lock"
+         
+        />
+        <CustomTextInput
+          label="Confirm Password" // ✅ new field
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secure
+          leftIcon="lock-check"
         />
 
         <View
           style={{
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: 'row',
+            alignItems: 'center',
             marginVertical: 10,
-            width: "90%",
-          }}
-        >
+            width: '90%',
+          }}>
           <CheckBox
-            isChecked={role === "student"}
-            onClick={() => setRole("student")}
+            isChecked={role === 'student'}
+            onClick={() => setRole('student')}
             checkBoxColor={theme.COLORS.primary}
           />
+
           <Text
             style={[
               FONTS.h3,
-              { color: theme.COLORS.text, marginLeft: 10, flex: 1 },
-            ]}
-          >
+              {color: theme.COLORS.text, marginLeft: 10, flex: 1},
+            ]}>
             Student
           </Text>
           <CheckBox
-            isChecked={role === "tutor"}
-            onClick={() => setRole("tutor")}
+            isChecked={role === 'tutor'}
+            onClick={() => setRole('tutor')}
             checkBoxColor={theme.COLORS.primary}
           />
           <Text
             style={[
               FONTS.h3,
-              { color: theme.COLORS.text, marginLeft: 10, flex: 1 },
-            ]}
-          >
+              {color: theme.COLORS.text, marginLeft: 10, flex: 1},
+            ]}>
             Tutor
           </Text>
         </View>
         <View
           style={{
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: 'row',
+            alignItems: 'center',
             marginVertical: 10,
-            width: "90%",
-          }}
-        >
+            width: '90%',
+          }}>
           <CheckBox
             isChecked={isTerms}
             onClick={() => setTerms(!isTerms)}
@@ -276,79 +209,38 @@ const SignUp = ({ navigation }: any) => {
                 marginLeft: 10,
                 flex: 1,
               },
-            ]}
-          >
+            ]}>
             I have Read and agree to all Terms & Conditions and Privacy Policy.
           </Text>
         </View>
-
-        {/* <CustomButton
+        <CustomButton
           title="Sign Up"
           onPress={handleSignUp}
-          style={{ width: "90%", borderRadius: 8 }}
-           loading={loading}
-        /> */}
-        <TouchableOpacity
-          onPress={handleSignUp}
-          style={[
-            {
-              width: "90%",
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 10,
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 8,
-              flexDirection: "row",
-            },
-            { backgroundColor: theme.COLORS.primary },
-          ]}
-        >
-          {loading ? (
-            <ActivityIndicator size="small" color={theme.COLORS.background} />
-          ) : (
-            <Text style={{ color: theme.COLORS.background, ...FONTS.h4 }}>
-              Sign Up
-            </Text>
-          )}
-        </TouchableOpacity>
+          style={{width: '90%', alignSelf: 'center', borderRadius: 8}}
+          loading={loading}
+        />
         <View
           style={{
             flex: 1,
-            flexDirection: "row",
+            flexDirection: 'row',
             marginTop: 10,
-          }}
-        >
-          <Text
-            style={[FONTS.body5, { color: theme.COLORS.text, marginEnd: 5 }]}
-          >
+          }}>
+          <Text style={[FONTS.body5, {color: theme.COLORS.text, marginEnd: 5}]}>
             Already have an account?
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("LOGIN")}>
+          <TouchableOpacity onPress={() => navigation.navigate('LOGIN')}>
             <Text
               style={[
                 FONTS.body5,
-                { color: theme.COLORS.text, textDecorationLine: "underline" },
-              ]}
-            >
+                {color: theme.COLORS.text, textDecorationLine: 'underline'},
+              ]}>
               Sign In Now
             </Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
 export default SignUp;
-const styles = StyleSheet.create({
-  button: {
-    width: "90%",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    flexDirection: "row",
-  },
-});
+const styles = StyleSheet.create({});

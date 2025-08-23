@@ -29,8 +29,10 @@ const UP_ARROW = require("../assets/images/up.png");
 const DOWN_ARROW = require("../assets/images/down-ed.png");
 const VIDEO_PLAY = require("../assets/images/video.png");
 const SUBSCRIPTION = require("../assets/images/crown.png");
+const DASHBOARD = require("../assets/images/dashboard.png");
 
 export {
+  DASHBOARD,
   SUBSCRIPTION,
   VIDEO_PLAY,
   UP_ARROW,

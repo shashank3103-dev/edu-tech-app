@@ -7,29 +7,31 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import React, { useState } from "react";
-import CommonHeader from "../../components/header/CommonHeader";
-import { useAppTheme } from "../../resources/ThemeContext";
-import { TextInput } from "react-native-paper";
-import { FONTS, ICONS } from "../../resources";
-import { Dropdown } from "react-native-element-dropdown";
-import { COURSE_CATEGORY } from "../../resources/DummyData";
-import CustomButton from "../../components/CustomButton";
-import { SelectedImage, uploadCourseBody } from "../../networkLayer/Modals";
-import ImageSelectionModal from "../../components/ImagePickerModel";
-import URLManager from "../../networkLayer/URLManager";
+} from 'react-native';
+import React, {useState} from 'react';
+import CommonHeader from '../../components/header/CommonHeader';
+import {useAppTheme} from '../../resources/ThemeContext';
+import {TextInput} from 'react-native-paper';
+import {FONTS, ICONS} from '../../resources';
+import {Dropdown} from 'react-native-element-dropdown';
+import {COURSE_CATEGORY} from '../../resources/DummyData';
+import CustomButton from '../../components/CustomButton';
+import {SelectedImage, uploadCourseBody} from '../../networkLayer/Modals';
+import ImageSelectionModal from '../../components/ImagePickerModel';
+import URLManager from '../../networkLayer/URLManager';
+import CustomTextInput from '../../components/CustomTextInput';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 const CourseUpload = () => {
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
-  const [target, setTarget] = useState("");
-  const [requirements, setRequirement] = useState("");
-  const [duration, setDuration] = useState("");
-  const [lectures, setLectures] = useState("");
-  const [learning_minutes, setLearningMinutes] = useState("");
+  const [title, setTitle] = useState('');
+  const [price, setPrice] = useState('');
+  const [description, setDescription] = useState('');
+  const [target, setTarget] = useState('');
+  const [requirements, setRequirement] = useState('');
+  const [duration, setDuration] = useState('');
+  const [lectures, setLectures] = useState('');
+  const [learning_minutes, setLearningMinutes] = useState('');
   const [courseImage, setCourseImage] = useState<SelectedImage | null>(null);
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState('');
   const [currentSelection, setCurrentSelection] = useState(0);
   const [currentSelectionImage, setCurrentSelectionImage] = useState(0);
   const [openImagePicker, setOpenImagePicker] = useState(false);
@@ -41,54 +43,59 @@ const CourseUpload = () => {
     try {
       setLoading(true);
       const formData = new FormData();
-     
-      formData.append("title", title);
+
+      formData.append('title', title);
       if (courseImage) {
-        formData.append("courseImage", {
+        formData.append('courseImage', {
           uri: courseImage.uri,
-          type: courseImage.type || "image/jpeg",
-          name:
-          courseImage.fileName || `certificate_${Date.now()}.jpg`,
+          type: courseImage.type || 'image/jpeg',
+          name: courseImage.fileName || `certificate_${Date.now()}.jpg`,
         });
       }
-      formData.append("category", category);
-      formData.append("price", price);
-      formData.append("description", description);
-      formData.append("target", target);
-      formData.append("requirements", requirements);
-      formData.append("duration", duration);
-      formData.append("lectures", lectures);
-      formData.append("learning_minutes", learning_minutes);
-      formData.append("is_published", "true");
+      formData.append('category', category);
+      formData.append('price', price);
+      formData.append('description', description);
+      formData.append('target', target);
+      formData.append('requirements', requirements);
+      formData.append('duration', duration);
+ 
+      formData.append('is_published', 'true');
 
-      if (!title || !category || !price || !description || !target || !requirements || !duration || !lectures || !learning_minutes) {
-        Alert.alert("Error", "Please fill all fields");
+      if (
+        !title ||
+        !category ||
+        !price ||
+        !description ||
+        !target ||
+        !requirements ||
+        !duration 
+      ) {
+        Alert.alert('Error', 'Please fill all fields');
         setLoading(false);
         return;
       }
 
       // Log the formData for debugging
 
-      
-      console.log("Sending data to API:", formData);
+      console.log('Sending data to API:', formData);
       let urlManager = new URLManager();
       return urlManager
-        .uploadCourse((formData as unknown) as uploadCourseBody)
-        .then((res) => {
+        .uploadCourse(formData as unknown as uploadCourseBody)
+        .then(res => {
           return res.json();
         })
-        .then((res) => {
+        .then(res => {
           if (!res.error) {
             console.log(res);
-           
-            Alert.alert("Success", res.message);
+
+            Alert.alert('Success', res.message);
           } else {
-            Alert.alert("Error", res.error);
-            if (res.error == "Failed to send ") Alert.alert("Error", res.error);
+            Alert.alert('Error', res.error);
+            if (res.error == 'Failed to send ') Alert.alert('Error', res.error);
           }
-          console.log("API response", res);
+          console.log('API response', res);
         })
-        .catch((e) => {
+        .catch(e => {
           Alert.alert(e.name, e.message);
           return e.response;
         })
@@ -103,7 +110,7 @@ const CourseUpload = () => {
 
   const uploadCourseImage = () => {
     return (
-      <View style={{ marginVertical: 10 }}>
+      <View style={{marginVertical: 10}}>
         <TouchableOpacity
           onPress={() => {
             if (currentSelection == 1) {
@@ -115,30 +122,27 @@ const CourseUpload = () => {
           style={{
             width: 300,
             borderWidth: 1,
-            paddingVertical: "3%",
-            alignContent: "center",
-            justifyContent: "space-between",
+            paddingVertical: '3%',
+            alignContent: 'center',
+            justifyContent: 'space-between',
             borderRadius: 5,
             borderColor: theme.COLORS.lightGray,
-          }}
-        >
+          }}>
           <View
             style={{
-              flexDirection: "row",
-              paddingHorizontal: "3%",
-              alignItems: "center",
-            }}
-          >
+              flexDirection: 'row',
+              paddingHorizontal: '3%',
+              alignItems: 'center',
+            }}>
             <Text
               style={{
                 color: theme.COLORS.gray,
                 ...FONTS.h3,
                 flex: 1,
-                padding: "2%",
+                padding: '2%',
                 borderRadius: 5,
                 borderColor: theme.COLORS.lightGray,
-              }}
-            >
+              }}>
               Course Image
             </Text>
             <Image
@@ -158,33 +162,30 @@ const CourseUpload = () => {
                 borderTopWidth: 1,
                 borderTopColor: theme.COLORS.lightGray,
                 marginTop: 5,
-                padding: "5%",
-              }}
-            >
+                padding: '5%',
+              }}>
               <View
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
+                  flexDirection: 'row',
+                  justifyContent: 'space-evenly',
                   marginTop: 5,
-                  padding: "5%",
-                }}
-              >
+                  padding: '5%',
+                }}>
                 <View
                   style={{
                     flex: 1,
                     borderWidth: 1,
                     height: theme.SIZES.height * 0.2,
                     // height:'30%',
-                    justifyContent: "center",
-                    alignItems: "center",
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     borderRadius: 5,
-                    overflow: "hidden",
+                    overflow: 'hidden',
                     borderColor: theme.COLORS.lightGray,
                     marginBottom: 10,
-                  }}
-                >
+                  }}>
                   {courseImage ? (
-                    <View style={{ overflow: "hidden" }}>
+                    <View style={{overflow: 'hidden'}}>
                       <Image
                         resizeMode="contain"
                         style={{
@@ -193,19 +194,18 @@ const CourseUpload = () => {
                           width: theme.SIZES.width * 0.6,
                           // width: 40,
                         }}
-                        source={{ uri: courseImage?.uri }}
+                        source={{uri: courseImage?.uri}}
                       />
                       <TouchableOpacity
                         onPress={() => {
                           setCourseImage(null);
                         }}
                         style={{
-                          position: "absolute",
+                          position: 'absolute',
                           height: 45,
                           right: 40,
                           width: 45,
-                        }}
-                      >
+                        }}>
                         <Image
                           source={ICONS.DOWN_ARROW}
                           style={{
@@ -222,18 +222,17 @@ const CourseUpload = () => {
                         style={{
                           color: theme.COLORS.gray,
                           ...FONTS.h4,
-                          padding: "2%",
+                          padding: '2%',
                           borderRadius: 5,
                           marginBottom: 10,
-                          textAlign: "center",
+                          textAlign: 'center',
                           borderColor: theme.COLORS.lightGray,
-                        }}
-                      >
+                        }}>
                         Upload Course Picture
                       </Text>
                       <CustomButton
-                        style={{ width: "70%", borderRadius: 5 }}
-                        title={"Upload"}
+                        style={{width: '70%', borderRadius: 5}}
+                        title={'Upload'}
                         onPress={() => {
                           setCurrentSelectionImage(1);
                           setOpenImagePicker(true);
@@ -254,54 +253,40 @@ const CourseUpload = () => {
     if (currentSelectionImage === 1) {
       setCourseImage(imageFile);
     } else {
-      Alert.alert("Warning", "Invalid selection for image upload");
+      Alert.alert('Warning', 'Invalid selection for image upload');
     }
   }
   return (
     <SafeAreaView
-      style={[{ flex: 1 }, { backgroundColor: theme.COLORS.background }]}
-    >
+      style={[{flex: 1}, {backgroundColor: theme.COLORS.background}]}>
       <CommonHeader title="Course Upload" />
-      <ScrollView
+      <KeyboardAwareScrollView
         contentContainerStyle={{
-          paddingBottom: 10,
-
-          padding: 10,
+          flexGrow: 1,
+          // justifyContent: 'center',
+          // alignItems: 'center',
         }}
-      >
+        showsVerticalScrollIndicator={false}
+        enableOnAndroid={true}
+        extraScrollHeight={10} // pushes input a bit above keyboard
+        keyboardShouldPersistTaps="handled">
         <Text
           style={[
             FONTS.h1,
-            { color: theme.COLORS.text, marginBottom: 20, marginStart: 20 },
-          ]}
-        >
+            {color: theme.COLORS.text, marginBottom: 20, marginStart: 20},
+          ]}>
           Upload
         </Text>
-        <View style={{ flex: 1, alignItems: "center" }}>
-          <TextInput
-            label="Title"
-            mode="outlined"
-            keyboardType="default"
+        <View style={{flex: 1, alignItems: 'center'}}>
+          <CustomTextInput
+            label="Course Title"
             value={title}
-            onChangeText={(text) => {
-              setTitle(text);
-            }}
-            style={{
-              width: "90%",
-              marginBottom: 20,
-            }}
-            theme={{
-              colors: {
-                text: theme.COLORS.text,
-                primary: theme.COLORS.text,
-                background: theme.COLORS.background,
-                placeholder: "#999",
-              },
-            }}
+            onChangeText={setTitle}
+            leftIcon="book"
           />
           <Dropdown
             style={{
-              width: "90%",
+              width: '90%',
               height: 50,
               borderWidth: 1,
               borderColor: theme.COLORS.gray,
@@ -339,103 +324,47 @@ const CourseUpload = () => {
             search
             maxHeight={300}
             value={category}
-            onChange={(item) => setCategory(item.value)}
+            onChange={item => setCategory(item.value)}
           />
 
-          <TextInput
+          <CustomTextInput
             label="Price"
-            mode="outlined"
-            keyboardType="default"
             value={price}
-            onChangeText={(text) => {
-              setPrice(text);
-            }}
-            style={{
-              width: "90%",
-              marginBottom: 20,
-            }}
-            theme={{
-              colors: {
-                text: theme.COLORS.text,
-                primary: theme.COLORS.text,
-                background: theme.COLORS.background,
-                placeholder: "#999",
-              },
-            }}
+            onChangeText={setPrice}
+            keyboardType="numeric"
+            leftIcon="currency-inr"
           />
-          <TextInput
+
+          <CustomTextInput
             label="Description"
-            mode="outlined"
-            keyboardType="default"
             value={description}
-            onChangeText={(text) => {
-              setDescription(text);
-            }}
-            style={{
-              width: "90%",
-              marginBottom: 20,
-            }}
-            theme={{
-              colors: {
-                text: theme.COLORS.text,
-                primary: theme.COLORS.text,
-                background: theme.COLORS.background,
-                placeholder: "#999",
-              },
-            }}
+            onChangeText={setDescription}
+            leftIcon="text"
           />
-          <TextInput
+
+          <CustomTextInput
             label="Target"
-            mode="outlined"
-            keyboardType="default"
             value={target}
-            onChangeText={(text) => {
-              setTarget(text);
-            }}
-            style={{
-              width: "90%",
-              marginBottom: 20,
-            }}
-            theme={{
-              colors: {
-                text: theme.COLORS.text,
-                primary: theme.COLORS.text,
-                background: theme.COLORS.background,
-                placeholder: "#999",
-              },
-            }}
+            onChangeText={setTarget}
+            leftIcon="account-group"
           />
-          <TextInput
+
+          <CustomTextInput
             label="Requirements"
-            mode="outlined"
-            keyboardType="default"
             value={requirements}
-            onChangeText={(text) => {
-              setRequirement(text);
-            }}
-            style={{
-              width: "90%",
-              marginBottom: 20,
-            }}
-            theme={{
-              colors: {
-                text: theme.COLORS.text,
-                primary: theme.COLORS.text,
-                background: theme.COLORS.background,
-                placeholder: "#999",
-              },
-            }}
+            onChangeText={setRequirement}
+            leftIcon="clipboard-list"
           />
-          <TextInput
+          {/* <TextInput
             label="Duration"
             mode="outlined"
             keyboardType="default"
             value={duration}
-            onChangeText={(text) => {
+            onChangeText={text => {
               setDuration(text);
             }}
             style={{
-              width: "90%",
+              width: '90%',
               marginBottom: 20,
             }}
             theme={{
@@ -443,58 +372,23 @@ const CourseUpload = () => {
                 text: theme.COLORS.text,
                 primary: theme.COLORS.text,
                 background: theme.COLORS.background,
-                placeholder: "#999",
+                placeholder: '#999',
               },
             }}
+          /> */}
+          <CustomTextInput
+            label="Duration"
+            value={duration}
+            onChangeText={setDuration}
+            leftIcon="clock"
           />
-          <TextInput
-            label="Lectures"
-            mode="outlined"
-            keyboardType="default"
-            value={lectures}
-            onChangeText={(text) => {
-              setLectures(text);
-            }}
-            style={{
-              width: "90%",
-              marginBottom: 20,
-            }}
-            theme={{
-              colors: {
-                text: theme.COLORS.text,
-                primary: theme.COLORS.text,
-                background: theme.COLORS.background,
-                placeholder: "#999",
-              },
-            }}
-          />
-          <TextInput
-            label="Learning Minutes"
-            mode="outlined"
-            keyboardType="default"
-            value={learning_minutes}
-            onChangeText={(text) => {
-              setLearningMinutes(text);
-            }}
-            style={{
-              width: "90%",
-              marginBottom: 20,
-            }}
-            theme={{
-              colors: {
-                text: theme.COLORS.text,
-                primary: theme.COLORS.text,
-                background: theme.COLORS.background,
-                placeholder: "#999",
-              },
-            }}
-          />
+
           {uploadCourseImage()}
 
           <CustomButton
             title="Upload Course"
             onPress={uploadCourseAPI}
-            style={{ width: "90%", borderRadius: 8 }}
+            style={{width: '90%', borderRadius: 8}}
           />
         </View>
         <ImageSelectionModal
@@ -504,7 +398,7 @@ const CourseUpload = () => {
           }}
           onImageSelected={handleSelectImage}
         />
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

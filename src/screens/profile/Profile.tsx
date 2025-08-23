@@ -62,7 +62,7 @@
 //   },
 // });
 
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -72,32 +72,29 @@ import {
   ActivityIndicator,
   ScrollView,
   Alert,
-} from "react-native";
-import { useAppTheme } from "../../resources/ThemeContext";
-import { FONTS, UTILITIES } from "../../resources";
-import URLManager from "../../networkLayer/URLManager";
+} from 'react-native';
+import {useAppTheme} from '../../resources/ThemeContext';
+import {FONTS, UTILITIES} from '../../resources';
+import URLManager from '../../networkLayer/URLManager';
 
-const Avatar = ({ name, theme }: { name: string; theme: any }) => {
-  const firstLetter = name?.charAt(0)?.toUpperCase() || "?";
+const Avatar = ({name, theme}: {name: string; theme: any}) => {
+  const firstLetter = name?.charAt(0)?.toUpperCase() || '?';
   return (
     <View
       style={[
         styles.avatar,
         {
           backgroundColor: theme.COLORS.card,
-          borderWidth:1,
-          borderColor:theme.COLORS.text,
+          borderWidth: 1,
+          borderColor: theme.COLORS.text,
         },
-      ]}
-    >
-      <Text style={[FONTS.h2, { color: theme.COLORS.text }]}>
-        {firstLetter}
-      </Text>
+      ]}>
+      <Text style={[FONTS.h2, {color: theme.COLORS.text}]}>{firstLetter}</Text>
     </View>
   );
 };
 
-const Profile = ({ navigation }: any) => {
+const Profile = ({navigation}: any) => {
   const theme = useAppTheme();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -107,66 +104,64 @@ const Profile = ({ navigation }: any) => {
   }, []);
 
   async function fetchProfile() {
-     try {
-       setLoading(true);
-       let urlManager = new URLManager();
-       return urlManager
-         .getProfile()
-         .then((res) => {
-           console.log(res);
-           return res.json() as Promise<any>;
-         })
-         .then(async (res: any) => {
-           console.log(res, "PROFILE DETAILS");
-           if (res?.user) {
+    try {
+      setLoading(true);
+      let urlManager = new URLManager();
+      return urlManager
+        .getProfile()
+        .then(res => {
+          console.log(res);
+          return res.json() as Promise<any>;
+        })
+        .then(async (res: any) => {
+          console.log(res, 'PROFILE DETAILS');
+          if (res?.user) {
             setUser(res.user);
-           }
-         })
-         .catch((e) => {
-           Alert.alert(e.name, e.message);
-           return e.response;
-         })
-         .finally(() => {
-           setLoading(false);
-         });
-     } catch (er) {
-       console.log(er);
-     }
-   }
+          }
+        })
+        .catch(e => {
+          Alert.alert(e.name, e.message);
+          return e.response;
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } catch (er) {
+      console.log(er);
+    }
+  }
 
   return (
     <SafeAreaView
-      style={[styles.container, { backgroundColor: theme.COLORS.background }]}
-    >
+      style={[styles.container, {backgroundColor: theme.COLORS.background}]}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text style={[FONTS.h2, { color: theme.COLORS.text, marginBottom: 20 }]}>
+        showsVerticalScrollIndicator={false}>
+        <Text style={[FONTS.h2, {color: theme.COLORS.text, marginBottom: 20}]}>
           Profile
         </Text>
- {user && <Avatar name={user.name} theme={theme} />}
+        {user && <Avatar name={user.name} theme={theme} />}
         {loading ? (
           <ActivityIndicator size="large" color={theme.COLORS.primary} />
         ) : (
           user && (
-            <View style={[styles.profileBox, { borderColor: theme.COLORS.card }]}>
+            <View style={[styles.profileBox, {borderColor: theme.COLORS.card}]}>
               <ProfileRow label="Name" value={user.name} theme={theme} />
               <ProfileRow label="Email" value={user.email} theme={theme} />
               <ProfileRow label="Phone" value={user.phone} theme={theme} />
               <ProfileRow
                 label="Role"
-                value={user.admin ? "Admin" : user.tutor ? "Tutor" : "Student"}
+                value={user.admin ? 'Admin' : user.tutor ? 'Tutor' : 'Student'}
                 theme={theme}
               />
               <ProfileRow
                 label="Verified"
-                value={user.is_verified ? "Yes" : "No"}
+                value={user.is_verified ? 'Yes' : 'No'}
                 theme={theme}
               />
               <ProfileRow
                 label="Blocked"
-                value={user.is_blocked ? "Yes" : "No"}
+                value={user.is_blocked ? 'Yes' : 'No'}
                 theme={theme}
               />
             </View>
@@ -174,14 +169,13 @@ const Profile = ({ navigation }: any) => {
         )}
 
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: theme.COLORS.primary }]}
+          style={[styles.button, {backgroundColor: theme.COLORS.primary}]}
           onPress={async () => {
             UTILITIES.clearEncryptedStorage().then(() => {
-              navigation.replace("LOGIN");
+              navigation.replace('LOGIN');
             });
-          }}
-        >
-          <Text style={{ color: theme.COLORS.background, ...FONTS.h4 }}>
+          }}>
+          <Text style={{color: theme.COLORS.background, ...FONTS.h4}}>
             Log Out
           </Text>
         </TouchableOpacity>
@@ -190,10 +184,10 @@ const Profile = ({ navigation }: any) => {
   );
 };
 
-const ProfileRow = ({ label, value, theme }: any) => (
+const ProfileRow = ({label, value, theme}: any) => (
   <View style={styles.row}>
-    <Text style={[FONTS.body4, { color: theme.COLORS.gray }]}>{label}</Text>
-    <Text style={[FONTS.body3, { color: theme.COLORS.text }]}>{value}</Text>
+    <Text style={[FONTS.body4, {color: theme.COLORS.gray}]}>{label}</Text>
+    <Text style={[FONTS.body3, {color: theme.COLORS.text}]}>{value}</Text>
   </View>
 );
 
@@ -204,11 +198,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    alignItems: "center",
+    alignItems: 'center',
     padding: 20,
   },
   profileBox: {
-    width: "100%",
+    width: '100%',
     borderWidth: 1,
     borderRadius: 12,
     padding: 16,
@@ -218,9 +212,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   button: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingVertical: 14,
     borderRadius: 8,
   },
@@ -228,8 +222,8 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 20,
     marginBottom: 20,
   },

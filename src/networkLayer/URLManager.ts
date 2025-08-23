@@ -3,6 +3,8 @@ import { EndPoints, baseUrl } from "../resources/Constants";
 import {
   cartBody,
   checkoutBody,
+  createLiveClassBody,
+  googleAuthLoginBody,
   loginBody,
   orderPaymentBody,
   razorpayVerificationBody,
@@ -141,6 +143,62 @@ export default class URLManager {
     console.log(urlPath);
     return urlService
       .fetchAsyncData(urlPath, data, "POST")
+      .then((res: any) => res);
+  }
+  getNotification() {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.GET_NOTIFICATION;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, {}, "GET")
+      .then((res: any) => res);
+  }
+  googleAuthLogin(data: googleAuthLoginBody) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.GOOGLE_AUTH;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, data, "POST")
+      .then((res: any) => res);
+  }
+  createTutorLiveSessions(data: createLiveClassBody) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.CREATE_LIVE_CLASS;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, data, "POST")
+      .then((res: any) => res);
+  }
+  joinLiveSessionStudent(roomId: string) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.LIVE_CLASS + roomId + "/live";
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, {}, "POST")
+      .then((res: any) => res);
+  }
+  endLiveSessionStudent(roomId: string) {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.LIVE_CLASS + roomId + "/end";
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, {}, "POST")
+      .then((res: any) => res);
+  }
+  getTutorDashboard() {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.TUTOR_DASHBOARD;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, {}, "GET")
+      .then((res: any) => res);
+  }
+  getTutorBooking() {
+    let urlService = new URLService();
+    let urlPath = baseUrl + EndPoints.TUTOR_BOOKING;
+    console.log(urlPath);
+    return urlService
+      .fetchAsyncData(urlPath, {}, "GET")
       .then((res: any) => res);
   }
 }

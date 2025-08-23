@@ -5,22 +5,17 @@ import RootNavigation from './src/navigation/RootNavigation';
 import {store} from './src/stateManagement/Store';
 import {ThemeProvider} from './src/resources/ThemeContext';
 import {PaperProvider} from 'react-native-paper';
-import {
-  onMessageListener,
-  requestUserPermission,
-} from './src/networkLayer/FCMServices';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const App = () => {
   LogBox.ignoreAllLogs();
-  useEffect(() => {
-    requestUserPermission();
-    onMessageListener();
-
  
-  }, []);
   return (
     <Provider store={store}>
-      <PaperProvider>
+      <PaperProvider
+        settings={{
+          icon: props => <MaterialCommunityIcons {...props} />,
+        }}>
         <ThemeProvider>
           <RootNavigation />
         </ThemeProvider>

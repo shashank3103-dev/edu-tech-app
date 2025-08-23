@@ -188,6 +188,21 @@ const CourseDetails = ({route, navigation}: any) => {
     if (seconds > 0 || result === '') result += `${seconds} sec`;
     return result.trim();
   };
+  if (loading) {
+    return (
+      <View
+        style={[
+          {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          {backgroundColor: theme.COLORS.background},
+        ]}>
+        <ActivityIndicator size="large" color={theme.COLORS.primary} />
+      </View>
+    );
+  }
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: theme.COLORS.background}]}>
@@ -269,7 +284,8 @@ const CourseDetails = ({route, navigation}: any) => {
                   FONTS.body4,
                   {color: theme.COLORS.gray, textTransform: 'capitalize'},
                 ]}>
-                {courseDetails?.learning_minutes} min
+                {courseDetails?.learning_minutes}
+               
               </Text>
             </View>
             <View style={styles.featureItem}>
@@ -483,7 +499,6 @@ const CourseDetails = ({route, navigation}: any) => {
       </ScrollView>
       {/* {!isEnrolled && ( */}
       <View style={[styles.footer, {backgroundColor: theme.COLORS.card}]}>
-      
         <Text
           style={[
             FONTS.h1,

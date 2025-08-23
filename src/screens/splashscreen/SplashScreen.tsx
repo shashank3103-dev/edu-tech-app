@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect } from "react";
 import { useAppTheme } from "../../resources/ThemeContext";
 import { ICONS } from "../../resources";
@@ -28,12 +28,11 @@ const SplashScreen = ({ navigation }: any) => {
         {
           flex: 1,
           padding: 20,
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center',
         },
-        { backgroundColor: theme.COLORS.background },
-      ]}
-    >
+        {backgroundColor: theme.COLORS.background},
+      ]}>
       <Image
         source={ICONS.APP_LOGO_ICON}
         style={{
@@ -42,6 +41,15 @@ const SplashScreen = ({ navigation }: any) => {
           tintColor: theme.COLORS.primary,
         }}
         resizeMode="contain"
+      />
+      <ActivityIndicator
+        size="large"
+        color={theme.COLORS.primary}
+        style={{
+          position: 'absolute',
+          bottom: 50, // adjust spacing from bottom
+          alignSelf: 'center',
+        }}
       />
     </SafeAreaView>
   );

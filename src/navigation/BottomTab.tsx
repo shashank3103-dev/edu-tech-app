@@ -10,11 +10,17 @@ import { useAppTheme } from "../resources/ThemeContext"; // assuming this exists
 import UploadNavigation from "./UploadNavigation";
 import { useEffect, useState } from "react";
 import { storageKeys } from "../resources/Constants";
+import Notification from "../screens/notification/Notification";
+import { onMessageListener, requestUserPermission } from "../networkLayer/FCMServices";
+import TutorDashboard from "../screens/tutorDasboard/TutorDashboard";
+import DashboardNavigation from "./DashboardNavigation";
 
 function getIcons(routeName: string) {
   switch (routeName) {
     case "HomeNavigation":
       return ICONS.HOME;
+      case "TutorDashboard":
+      return ICONS.DASHBOARD;
     case "LearnNavigation":
       return ICONS.LEARN;
     case "UploadNavigation":
@@ -124,7 +130,10 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   const [role, setRole] = useState<"tutor" | "student" | null>(null);
   const [loading, setLoading] = useState(true);
-
+ useEffect(() => {
+   requestUserPermission();
+   onMessageListener();
+ }, []);
   useEffect(() => {
     (async () => {
       const savedRole = await UTILITIES.getDataFromEncryptedStorage(
@@ -141,16 +150,25 @@ export default function App() {
   }, []);
 
   if (loading) return null;
+
   return (
     <Tab.Navigator
-      screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true }}
-      tabBar={(props) => <MyTabBar {...props} />}
-    >
-      <Tab.Screen name="HomeNavigation" component={HomeNavigation} />
-      {role === "tutor" ? (
+      screenOptions={{headerShown: false, tabBarHideOnKeyboard: true}}
+      tabBar={props => <MyTabBar {...props} />}>
+      {/* <Tab.Screen name="HomeNavigation" component={HomeNavigation} /> */}
+      {role === 'tutor' ? (
+        <Tab.Screen
+          name="DashboardNavigation"
+          component={DashboardNavigation}
+        
+        />
+      ) : (
+        <Tab.Screen name="HomeNavigation" component={HomeNavigation} />
+      )}
+      {role === 'tutor' ? (
         <Tab.Screen name="UploadNavigation" component={UploadNavigation} />
       ) : (
-        <Tab.Screen name="LearnNavigation" component={LearnNavigation} />
+        <Tab.Screen name="LearnNavigation" component={Notification} />
       )}
       <Tab.Screen name="BookingNavigation" component={BookingNavigation} />
       <Tab.Screen name="Profile" component={Profile} />
